@@ -1,0 +1,16 @@
+id = "agents"
+name = "AGENTS.md (open standard)"
+confidence = "verified"
+docs = "https://agents.md"
+detect = ["AGENTS.md"]
+note = """
+The cross-vendor baseline, stewarded by the Linux Foundation's Agentic AI \
+Foundation and read natively by Cursor, Copilot, Codex, Aider, Zed, Amp, \
+Continue, Roo, Windsurf and others. Because so many tools read this one file, \
+adapters for those tools deliberately do not declare their own instructions \
+target -- two adapters writing one path would fight over it."""
+
+[kinds.instructions]
+target = "AGENTS.md"
+strategy = "link"
+aggregate_rules = true

@@ -1,0 +1,12 @@
+id = "zed"
+name = "Zed"
+confidence = "unverified"
+docs = "https://zed.dev/docs/ai/mcp"
+detect = [".zed/settings.json", ".rules"]
+note = "Instructions come from AGENTS.md, which Zed reads natively."
+
+[kinds.mcp]
+target = ".zed/settings.json"
+strategy = "merge"
+transformer = "mcp_context_servers"
+note = "Zed calls these 'context_servers' and tags externally-defined ones with source: custom."

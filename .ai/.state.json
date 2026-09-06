@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "entries": {
+    "AGENTS.md": {
+      "adapter": "agents",
+      "kind": "instructions",
+      "slug": "instructions",
+      "source": ".ai/instructions.md",
+      "strategy": "aggregate",
+      "output_hash": "cd6f94e11212",
+      "source_hash": "b7e7bd2418e3"
+    }
+  },
+  "provenance": {},
+  "tools": []
+}

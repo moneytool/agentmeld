@@ -1,0 +1,26 @@
+id = "gemini"
+name = "Gemini CLI"
+confidence = "verified"
+docs = "https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/custom-commands.md"
+detect = ["GEMINI.md", ".gemini/commands/", ".gemini/settings.json"]
+
+[kinds.instructions]
+target = "GEMINI.md"
+strategy = "link"
+aggregate_rules = true
+
+[kinds.command]
+target = ".gemini/commands/{slug}.toml"
+strategy = "generate"
+transformer = "gemini_command"
+note = """
+TOML, not Markdown: the body becomes a 'prompt' key. This is the case that \
+makes a pure-symlink tool impossible -- the container format differs, not just \
+the field names."""
+
+[kinds.mcp]
+target = ".gemini/settings.json"
+strategy = "merge"
+transformer = "mcp_mcp_servers"
+confidence = "unverified"
+note = "The custom-commands documentation does not cover settings.json; unconfirmed."

@@ -1,0 +1,39 @@
+id = "cursor"
+name = "Cursor"
+confidence = "verified"
+docs = "https://cursor.com/docs/context/rules"
+detect = [".cursor/rules/", ".cursor/mcp.json", ".cursorrules"]
+note = """
+Instructions come from AGENTS.md, which Cursor reads natively (including in \
+subdirectories) -- see the 'agents' adapter. Note that Cursor ignores plain \
+.md files inside .cursor/rules, which is why rules are emitted as .mdc."""
+
+[kinds.rule]
+target = ".cursor/rules/{slug}.mdc"
+strategy = "generate"
+transformer = "markdown"
+[kinds.rule.frontmatter]
+description = "description"
+globs = "globs"
+always = "alwaysApply!true"
+[kinds.rule.defaults]
+alwaysApply = false
+
+[kinds.skill]
+target = ".cursor/skills/{slug}/SKILL.md"
+strategy = "link"
+confidence = "unverified"
+
+[kinds.command]
+target = ".cursor/commands/{slug}.md"
+strategy = "generate"
+transformer = "markdown"
+confidence = "unverified"
+[kinds.command.frontmatter]
+description = "description"
+
+[kinds.mcp]
+target = ".cursor/mcp.json"
+strategy = "merge"
+transformer = "mcp_mcp_servers"
+confidence = "unverified"

@@ -1,0 +1,30 @@
+name: agentmeld
+description: Keep one canonical copy of your AI instructions, rules, skills, agents, commands and MCP config, mirrored to every AI tool.
+branding:
+  icon: link
+  color: purple
+inputs:
+  args:
+    description: Arguments passed to the agentmeld CLI.
+    required: false
+    default: sync --check
+  version:
+    description: Version of agentmeld to install (default: latest).
+    required: false
+    default: ""
+  working-directory:
+    description: Directory to run in.
+    required: false
+    default: "."
+runs:
+  using: composite
+  steps:
+    - name: Install agentmeld
+      shell: bash
+      run: |
+        python3 -m pip install --quiet --upgrade \
+          "agentmeld${{ inputs.version && format('=={0}', inputs.version) || '' }}"
+    - name: Run agentmeld
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: agentmeld ${{ inputs.args }}

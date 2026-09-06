@@ -1,0 +1,5 @@
+# Normalise line endings: generated mirrors are always written with LF, so a
+# CRLF checkout would otherwise show every mirror as drifted on Windows.
+* text=auto eol=lf
+*.png binary
+*.whl binary

@@ -1,0 +1,54 @@
+id = "copilot"
+name = "GitHub Copilot"
+confidence = "verified"
+docs = "https://docs.github.com/copilot/how-tos/configure-custom-instructions/add-repository-instructions"
+detect = [
+  ".github/copilot-instructions.md",
+  ".github/instructions/",
+  ".github/prompts/",
+  ".github/agents/",
+]
+
+[kinds.instructions]
+target = ".github/copilot-instructions.md"
+strategy = "link"
+
+[kinds.rule]
+target = ".github/instructions/{slug}.instructions.md"
+strategy = "generate"
+transformer = "markdown"
+note = "Copilot documents only applyTo and excludeAgent here, so nothing else is emitted."
+[kinds.rule.frontmatter]
+globs = "applyTo:comma"
+always = "applyTo!**"
+description = "__drop__"
+name = "__drop__"
+
+[kinds.command]
+target = ".github/prompts/{slug}.prompt.md"
+strategy = "generate"
+transformer = "markdown"
+[kinds.command.frontmatter]
+name = "name"
+description = "description"
+argument-hint = "argument-hint"
+model = "model"
+tools = "tools"
+
+[kinds.agent]
+target = ".github/agents/{slug}.agent.md"
+strategy = "generate"
+transformer = "markdown"
+confidence = "unverified"
+note = "Path seen in community docs; not yet confirmed against GitHub's own documentation."
+[kinds.agent.frontmatter]
+name = "name"
+description = "description"
+tools = "tools"
+model = "model"
+
+[kinds.mcp]
+target = ".vscode/mcp.json"
+strategy = "merge"
+transformer = "mcp_servers"
+note = "VS Code uses the 'servers' key, not 'mcpServers', and wants an explicit stdio type."

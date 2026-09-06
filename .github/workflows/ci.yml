@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    # Windows is not optional here: the symlink fallback only really exists if it
+    # is exercised on a machine that cannot make symlinks.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.9", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Configure git (fixtures create commits)
+        run: |
+          git config --global user.email ci@example.com
+          git config --global user.name CI
+      - name: Run tests
+        run: uv run --python ${{ matrix.python }} --with pytest --with pyyaml --with tomli python -m pytest -q
+
+  self-check:
+    # agentmeld keeps its own AI config in sync, and CI fails if it drifts.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+      - run: uv run agentmeld detect
+      - run: uv run agentmeld sync --check
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv build
+      - run: uv run --with dist/*.whl --no-project agentmeld --version
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/

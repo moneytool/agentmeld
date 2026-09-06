@@ -1,0 +1,20 @@
+# agentmeld -- one AI context, every agent.
+# https://github.com/vampiremac/agentmeld
+
+[agentmeld]
+# Where the single source of truth lives.
+canonical_dir = ".ai"
+
+# auto: use symlinks where the filesystem allows, copies where it does not.
+mode = "auto"
+
+# commit: check generated mirrors in, so teammates and CI without agentmeld
+#         installed still get working AI config.
+# ignore: keep only .ai/ in git and let everyone run sync themselves.
+git_policy = "commit"
+
+# Paths not confirmed against vendor documentation are skipped by default.
+include_unverified = false
+
+# Limit which tools to mirror to. Omit to mirror to every tool detected here.
+# targets = ["claude", "copilot", "cursor"]

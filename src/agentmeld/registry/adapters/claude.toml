@@ -1,0 +1,44 @@
+id = "claude"
+name = "Claude Code"
+confidence = "verified"
+docs = "https://code.claude.com/docs/en/skills"
+detect = ["CLAUDE.md", ".claude/skills/", ".claude/agents/", ".claude/commands/", ".mcp.json"]
+
+[kinds.instructions]
+target = "CLAUDE.md"
+strategy = "link"
+aggregate_rules = true
+note = "Claude Code has no per-file rule mechanism, so rules fold in here."
+
+[kinds.skill]
+target = ".claude/skills/{slug}/SKILL.md"
+strategy = "link"
+note = """
+Canonical skills are authored in Agent Skills vocabulary (hyphenated keys), \
+which is exactly what Claude Code reads -- so this stays a real symlink and \
+editing either path edits the same file."""
+
+[kinds.agent]
+target = ".claude/agents/{slug}.md"
+strategy = "generate"
+transformer = "markdown"
+[kinds.agent.frontmatter]
+name = "name"
+description = "description"
+tools = "tools:comma"
+model = "model"
+
+[kinds.command]
+target = ".claude/commands/{slug}.md"
+strategy = "generate"
+transformer = "markdown"
+[kinds.command.frontmatter]
+description = "description"
+argument-hint = "argument-hint"
+allowed-tools = "allowed-tools"
+model = "model"
+
+[kinds.mcp]
+target = ".mcp.json"
+strategy = "merge"
+transformer = "mcp_mcp_servers"
