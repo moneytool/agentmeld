@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.2] - 2026-09-07
 
 ### Added
 - Gemini CLI TOML commands can now be adopted, not just generated. A command
