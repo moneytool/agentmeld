@@ -22,19 +22,41 @@ from ..model import Asset, KindSpec
 from . import GenContext, register
 from .json_merge import dumps, load_jsonc
 
-__all__ = ["canonical_servers", "SHAPES"]
+__all__ = ["canonical_servers", "SHAPES", "has_comments"]
 
 
 def canonical_servers(asset: Asset) -> Dict[str, Any]:
     """Read ``.ai/mcp.json``, accepting either a wrapped or bare mapping."""
     text = asset.body if asset.body.strip() else "{}"
-    data = json.loads(text)
+    try:
+        data = json.loads(text)
+    except ValueError as exc:
+        # Without the path this surfaces as a bare "Expecting value: line 1
+        # column 1", which says nothing about which file to go and fix.
+        raise ValueError("{} is not valid JSON: {}".format(asset.path, exc)) from None
     if not isinstance(data, dict):
-        raise ValueError(".ai/mcp.json must contain a JSON object")
+        raise ValueError("{} must contain a JSON object".format(asset.path))
     servers = data.get("mcpServers", data)
     if not isinstance(servers, dict):
         raise ValueError(".ai/mcp.json: 'mcpServers' must be an object")
     return servers
+
+
+def has_comments(existing: Optional[bytes]) -> bool:
+    """Would a rewrite of this file destroy comments?
+
+    Comments can be parsed but not preserved, so the planner asks this and warns.
+    Deliberately a pure query rather than a module-level flag the transformer
+    sets: shared mutable state would leak between runs of a long-lived process
+    such as the watcher.
+    """
+    if not existing:
+        return False
+    try:
+        _, had_comments = load_jsonc(existing.decode("utf-8"))
+    except (ValueError, UnicodeDecodeError):
+        return False
+    return had_comments
 
 
 def _shape_passthrough(server: Mapping[str, Any]) -> Dict[str, Any]:
@@ -78,7 +100,7 @@ def _merge(
 
     document: Dict[str, Any] = {}
     if existing:
-        document, _had_comments = load_jsonc(existing.decode("utf-8"))
+        document, _ = load_jsonc(existing.decode("utf-8"))
 
     section = dict(document.get(key) or {})
 

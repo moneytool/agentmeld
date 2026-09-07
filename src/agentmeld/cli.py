@@ -179,6 +179,13 @@ def cmd_adopt(args) -> int:
     return run_adopt(config, registry, state, args)
 
 
+def cmd_restore(args) -> int:
+    from .restore import run_restore
+
+    config, registry, state = _context(args)
+    return run_restore(config, registry, state, args)
+
+
 def cmd_watch(args) -> int:
     from .watch import run_watch
 
@@ -283,6 +290,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_install_hooks)
+
+    p = sub.add_parser("restore", help="stop managing this repo, leaving everything working")
+    common(p)
+    p.add_argument(
+        "--from-backup",
+        nargs="?",
+        const="",
+        default=None,
+        metavar="TIMESTAMP",
+        help="put the pre-init files back (default: the most recent backup)",
+    )
+    p.add_argument("--keep-hooks", action="store_true", help="leave installed hooks in place")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_restore)
 
     p = sub.add_parser("doctor", help="report drift, conflicts, orphans and dropped keys")
     common(p)

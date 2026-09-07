@@ -81,6 +81,7 @@ agentmeld sync --adopt    # pull in new vendor files first, then mirror
 agentmeld sync --check    # CI: exit 1 if any mirror is stale
 agentmeld install-hooks   # auto-sync on agent writes and on commit
 agentmeld watch           # or run a daemon instead
+agentmeld restore         # stop managing this repo, leaving every tool working
 agentmeld doctor          # drift, conflicts, orphans, dropped keys
 agentmeld list-adapters   # the support matrix, with confidence levels
 ```
@@ -249,6 +250,25 @@ runs on all three platforms and on Python 3.9 through 3.13.
 By default the mirrors are checked in, so teammates and CI **without**
 agentmeld installed still get working AI config. Set `git_policy = "ignore"`
 in `.ai/agentmeld.toml` for the opposite tradeoff.
+
+## Getting back out
+
+```bash
+agentmeld restore
+```
+
+Turns every symlinked mirror into a real file, removes the hooks, and stops
+managing the repo. Every tool keeps working exactly as it did; agentmeld is
+simply no longer involved. Your `.ai/` tree is left in place for you to delete.
+
+To go all the way back to how things were before `init`:
+
+```bash
+agentmeld restore --from-backup
+```
+
+That puts the original files back byte for byte from `.ai/.backup/`, and removes
+the mirrors that did not exist beforehand. Both accept `--dry-run`.
 
 ## Safety
 

@@ -104,7 +104,7 @@ def build_plan(
 
             for asset in grouped.get(kind, []):
                 plan.mirrors.extend(
-                    _plan_asset(config, adapter, spec, asset, state, mode)
+                    _plan_asset(config, adapter, spec, asset, state, mode, plan)
                 )
 
     _check_collisions(plan)
@@ -160,8 +160,9 @@ def _plan_instructions(config, adapter, spec, grouped, rules, state, mode) -> Li
     return [mirror]
 
 
-def _plan_asset(config, adapter, spec, asset, state, mode) -> List[Mirror]:
+def _plan_asset(config, adapter, spec, asset, state, mode, plan=None) -> List[Mirror]:
     from .linker import classify
+    from .transform.mcp import has_comments
 
     rendered = spec.render_target(asset.slug)
     target = config.root / rendered
@@ -185,6 +186,11 @@ def _plan_asset(config, adapter, spec, asset, state, mode) -> List[Mirror]:
     payload: Optional[bytes] = None
     if spec.strategy in (Strategy.GENERATE, Strategy.MERGE):
         existing = target.read_bytes() if target.is_file() else None
+        if plan is not None and spec.strategy is Strategy.MERGE and has_comments(existing):
+            plan.warnings.append(
+                "{}: comments in {} cannot survive a JSON rewrite and were "
+                "dropped".format(adapter.id, config.rel(target))
+            )
         ctx = _context(config, asset, adapter.id)
         if spec.strategy is Strategy.MERGE:
             ctx = GenContext(
