@@ -140,3 +140,63 @@ def test_bad_canonical_json_names_the_file(tmp_path):
     with _pytest.raises(ValueError) as excinfo:
         canonical_servers(asset)
     assert "mcp.json" in str(excinfo.value), "the message must say which file to fix"
+
+
+class TestTomlCommandRoundTrip:
+    """agentmeld could generate Gemini's TOML commands but never adopt them."""
+
+    def _write_toml(self, repo, body, description="Summarise the diff"):
+        path = repo / ".gemini/commands/sum.toml"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(
+            ('description = "{}"\nprompt = """\n{}\n"""\n'.format(description, body)).encode()
+        )
+        return path
+
+    def test_a_toml_command_becomes_canonical_markdown(self, repo, run_cli):
+        self._write_toml(repo, "Summarise the staged diff.")
+        run_cli("--root", str(repo), "init", "--force")
+        canonical = repo / ".ai/commands/sum.md"
+        assert canonical.is_file()
+        text = canonical.read_text()
+        assert "Summarise the staged diff." in text
+        assert "description: Summarise the diff" in text
+
+    def test_it_then_reaches_the_other_tools(self, repo, run_cli):
+        self._write_toml(repo, "Summarise the staged diff.")
+        run_cli("--root", str(repo), "init", "--force")
+        assert (repo / ".github/prompts/sum.prompt.md").is_file()
+        assert (repo / ".claude/commands/sum.md").is_file()
+
+    def test_round_trip_preserves_the_body(self, repo, run_cli):
+        import sys
+
+        if sys.version_info >= (3, 11):
+            import tomllib
+        else:
+            import tomli as tomllib
+
+        # A backslash must be escaped in a TOML basic string; this is what a
+        # correctly written command file looks like on disk.
+        body = "Match \\d+ digits and handle quotes."
+        self._write_toml(repo, body.replace("\\", "\\\\"))
+        run_cli("--root", str(repo), "init", "--force")
+        run_cli("--root", str(repo), "sync", "--targets", "gemini")
+        regenerated = repo / ".gemini/commands/sum.toml"
+        parsed = tomllib.loads(regenerated.read_text())
+        assert parsed["prompt"].strip() == body
+        assert parsed["description"] == "Summarise the diff"
+
+    def test_a_toml_without_a_prompt_is_left_alone(self, repo, run_cli):
+        path = repo / ".gemini/commands/other.toml"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b'title = "not one of ours"\n')
+        run_cli("--root", str(repo), "init", "--force")
+        assert path.is_file(), "a TOML that is not a command must not be consumed"
+
+    def test_malformed_toml_is_left_alone(self, repo, run_cli):
+        path = repo / ".gemini/commands/bad.toml"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"this is not = = toml\n")
+        run_cli("--root", str(repo), "init", "--force")
+        assert path.is_file()
