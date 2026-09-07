@@ -109,6 +109,7 @@ def build_plan(
 
     _check_collisions(plan)
     _reject_canonical_targets(plan, config)
+    _report_comment_loss(plan)
     return plan
 
 
@@ -228,6 +229,17 @@ def _plan_asset(config, adapter, spec, asset, state, mode) -> List[Mirror]:
             mirrors.append(side)
 
     return mirrors
+
+
+def _report_comment_loss(plan: SyncPlan) -> None:
+    from .transform.mcp import COMMENT_LOSS
+
+    for tool in sorted(COMMENT_LOSS):
+        plan.warnings.append(
+            "{}: comments in the existing config cannot survive a JSON rewrite "
+            "and were dropped".format(tool)
+        )
+    COMMENT_LOSS.clear()
 
 
 def _reject_canonical_targets(plan: SyncPlan, config: Config) -> None:

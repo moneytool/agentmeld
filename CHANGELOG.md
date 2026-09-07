@@ -21,3 +21,12 @@ First release. https://pypi.org/project/agentmeld/
   copies and a `--mode {link,copy,auto}` override.
 - `doctor`, reporting drift, conflicts, orphans, gated paths, and every
   frontmatter key dropped in translation.
+
+### Added
+- `agentmeld restore` — leave the repo in a working state without agentmeld, or
+  put the pre-`init` files back from a backup. A tool that moves your files needs
+  a supported way back.
+
+### Fixed
+- Comments in an existing `.vscode/mcp.json` (JSONC) are reported when a rewrite
+  drops them, instead of disappearing without a word.

@@ -22,7 +22,12 @@ from ..model import Asset, KindSpec
 from . import GenContext, register
 from .json_merge import dumps, load_jsonc
 
-__all__ = ["canonical_servers", "SHAPES"]
+__all__ = ["canonical_servers", "SHAPES", "COMMENT_LOSS"]
+
+#: Adapters whose merged config contained comments this run. Comments cannot
+#: survive a JSON rewrite, so the planner reports them rather than dropping them
+#: without a word.
+COMMENT_LOSS = set()
 
 
 def canonical_servers(asset: Asset) -> Dict[str, Any]:
@@ -78,7 +83,12 @@ def _merge(
 
     document: Dict[str, Any] = {}
     if existing:
-        document, _had_comments = load_jsonc(existing.decode("utf-8"))
+        document, had_comments = load_jsonc(existing.decode("utf-8"))
+        if had_comments:
+            # We can parse comments but cannot preserve them through a rewrite,
+            # so say so. Quietly deleting somebody's notes from their own config
+            # is exactly the kind of thing that loses a tool its users' trust.
+            COMMENT_LOSS.add(ctx.tool)
 
     section = dict(document.get(key) or {})
 
