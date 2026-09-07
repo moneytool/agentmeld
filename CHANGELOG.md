@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Gemini CLI TOML commands can now be adopted, not just generated. A command
+  written for Gemini becomes canonical and reaches every other tool; previously
+  the round trip was one-way.
+
 ## [0.1.1] - 2026-09-07
 
 ## [0.1.0] - 2026-09-07

@@ -212,7 +212,10 @@ def adopt_path(
     if path.suffix == ".json":
         shutil.move(str(path), str(dest))
     elif path.suffix == ".toml":
-        return "{}: adopting TOML commands is not supported yet".format(rel)
+        adopted = _adopt_toml_command(path, dest)
+        if adopted is None:
+            return "{}: no 'prompt' key, not an agentmeld command".format(rel)
+        path.unlink()
     else:
         text = path.read_text(encoding="utf-8")
         vendor_fm, body = fm.split(text)
@@ -233,6 +236,40 @@ _MCP_KEYS = {
 
 #: Keys a vendor shape adds that canonical form should not carry back.
 _VENDOR_SHAPE_KEYS = ("type", "source")
+
+
+def _adopt_toml_command(path, dest):
+    """Turn a Gemini CLI TOML command back into a canonical Markdown one.
+
+    The generate side has always produced these; without this the round trip was
+    one-way, so a command written for Gemini could never become canonical and
+    reach the other tools.
+    """
+    import sys
+
+    if sys.version_info >= (3, 11):
+        import tomllib
+    else:  # pragma: no cover - the 3.9/3.10 CI legs
+        import tomli as tomllib
+
+    try:
+        with path.open("rb") as handle:
+            data = tomllib.load(handle)
+    except (ValueError, OSError):
+        return None
+
+    prompt = data.get("prompt")
+    if not isinstance(prompt, str):
+        return None
+
+    front = {}
+    description = data.get("description")
+    if isinstance(description, str) and description:
+        front["description"] = description
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(fm.render(front, prompt).encode("utf-8"))
+    return dest
 
 
 def _adopt_merged_subtree(path, rel, config, adapter, spec, dry_run):
