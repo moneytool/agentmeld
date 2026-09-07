@@ -82,4 +82,4 @@ jobs:
           git push -u origin "$branch"
           gh pr create --base main --head "$branch" \
             --title "Release v${NEW}" \
-            --body "$(printf 'Bumps \x60%s\x60 to \x60%s\x60.\n\n**Merging this does not publish.** Publishing happens when the tag is pushed:\n\n\x60\x60\x60bash\ngit checkout main && git pull && git tag v%s && git push origin v%s\n\x60\x60\x60\n\nThat fires \x60release.yml\x60, which builds and uploads to PyPI via trusted publishing.\n\nCheck the CHANGELOG entry reads well before merging.\n' "$CURRENT" "$NEW" "$NEW" "$NEW")"
+            --body "$(printf 'Bumps \x60%s\x60 to \x60%s\x60.\n\nMerging this PR to \x60main\x60 auto-creates the \x60v%s\x60 tag (from the merge commit) and triggers publish via \x60release.yml\x60.\n\nThe release workflow only publishes tags that point to commits on \x60main\x60 and whose tag matches \x60src/agentmeld/__init__.py\x60.\n\nCheck the CHANGELOG entry reads well before merging.\n' "$CURRENT" "$NEW" "$NEW")"

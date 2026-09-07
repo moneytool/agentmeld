@@ -12,10 +12,38 @@ jobs:
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
+      contents: read
       # Trusted publishing: no API token stored anywhere.
       id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify tag points to main history
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          if ! git merge-base --is-ancestor "${GITHUB_SHA}" origin/main; then
+            echo "::error::${GITHUB_REF_NAME} points to ${GITHUB_SHA}, which is not on main"
+            exit 1
+          fi
+      - name: Verify tag matches package version
+        run: |
+          set -euo pipefail
+          version="$(python3 - <<'PY'
+          from pathlib import Path
+          import re
+          text = Path("src/agentmeld/__init__.py").read_text(encoding="utf-8")
+          match = re.search(r'__version__ = "(\d+\.\d+\.\d+)"', text)
+          if match is None:
+              raise SystemExit("missing __version__")
+          print(match.group(1))
+          PY
+          )"
+          if [ "v${version}" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} does not match package version v${version}"
+            exit 1
+          fi
       - uses: astral-sh/setup-uv@v5
       - run: uv build
       - name: Publish to PyPI
