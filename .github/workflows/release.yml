@@ -2,7 +2,10 @@ name: Release
 
 on:
   push:
-    tags: ["v*"]
+    # Semver tags only. "v*" also matched the moving `v1` tag used to pin the
+    # GitHub Action, so re-pointing it re-ran a publish of whatever version
+    # happened to be in pyproject.toml.
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
 
 jobs:
   publish:
