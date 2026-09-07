@@ -1,6 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.0] - 2026-09-07
+
+First release. https://pypi.org/project/agentmeld/
 
 ### Added
 - Canonical `.ai/` tree for instructions, rules, skills, agents, commands and MCP.

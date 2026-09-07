@@ -1,5 +1,10 @@
 # agentmeld
 
+[![PyPI](https://img.shields.io/pypi/v/agentmeld)](https://pypi.org/project/agentmeld/)
+[![Python](https://img.shields.io/pypi/pyversions/agentmeld)](https://pypi.org/project/agentmeld/)
+[![CI](https://github.com/moneytool/agentmeld/actions/workflows/ci.yml/badge.svg)](https://github.com/moneytool/agentmeld/actions/workflows/ci.yml)
+[![License](https://img.shields.io/pypi/l/agentmeld)](LICENSE)
+
 **One AI context, every agent.**
 
 Your repo is used with Claude Code, Copilot, and Cursor. So you maintain
@@ -20,22 +25,18 @@ vendor location — a **real symlink** where the formats agree, a small
 
 ## Install
 
-> **Not on PyPI yet** — the first release is pending. Until then, install straight
-> from this repo (verified working):
-
 ```bash
-uv tool install git+https://github.com/moneytool/agentmeld
+uv tool install agentmeld
 ```
 
-Or try it without installing anything at all:
+Or `pipx install agentmeld`, or `pip install agentmeld`. `agm` is a shorter
+alias for the same CLI.
+
+Try it without installing anything:
 
 ```bash
-uvx --from git+https://github.com/moneytool/agentmeld agentmeld detect
+uvx agentmeld detect
 ```
-
-Once published, it will be `uv tool install agentmeld` (or `pipx install
-agentmeld`, or `pip install agentmeld`). `agm` is a shorter alias for the same
-CLI.
 
 ## Quickstart
 
@@ -176,13 +177,10 @@ notices for a week**, whereas a failing CI check cannot be silently lost.
 In CI, via the bundled action:
 
 ```yaml
-- uses: moneytool/agentmeld@main
+- uses: moneytool/agentmeld@v1
   with:
     args: sync --check
 ```
-
-(Pin to `@v1` once the first release is tagged. Before agentmeld is on PyPI the
-action installs itself from this repository, so it works either way.)
 
 ### Adoption, not just generation
 
