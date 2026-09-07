@@ -142,3 +142,118 @@ class TestJsoncCommentWarning:
         )
         run_cli("--root", str(repo), "init", "--force")  # the new file dirties the tree
         assert "comments" in capsys.readouterr().out.lower()
+
+
+class TestHookRemovalPrecision:
+    """Reported by Copilot on PR #4: substring matching deleted user hooks."""
+
+    def _settings(self, repo, groups):
+        path = repo / ".claude/settings.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(json.dumps({"hooks": {"PostToolUse": groups}}).encode())
+        return path
+
+    def test_a_user_hook_that_calls_agentmeld_survives(self, initialised, run_cli):
+        from agentmeld.hooks import HOOK_COMMAND
+
+        path = self._settings(
+            initialised,
+            [
+                {"matcher": "Write", "hooks": [{"type": "command", "command": HOOK_COMMAND}]},
+                {"matcher": "Edit", "hooks": [{"type": "command", "command": "agentmeld doctor"}]},
+            ],
+        )
+        run_cli("--root", str(initialised), "restore")
+        remaining = [
+            h["command"]
+            for g in json.loads(path.read_text())["hooks"]["PostToolUse"]
+            for h in g["hooks"]
+        ]
+        assert remaining == ["agentmeld doctor"]
+
+    def test_a_hook_merely_mentioning_agentmeld_survives(self, initialised, run_cli):
+        path = self._settings(
+            initialised,
+            [{"matcher": "Write", "hooks": [{"type": "command", "command": "echo agentmeld"}]}],
+        )
+        run_cli("--root", str(initialised), "restore")
+        assert json.loads(path.read_text())["hooks"]["PostToolUse"]
+
+    def test_a_command_installed_by_an_older_version_is_still_cleaned_up(
+        self, initialised, run_cli
+    ):
+        path = self._settings(
+            initialised,
+            [{"matcher": "Write", "hooks": [{"type": "command", "command": "agentmeld sync --quiet"}]}],
+        )
+        run_cli("--root", str(initialised), "restore")
+        assert not json.loads(path.read_text()).get("hooks", {}).get("PostToolUse")
+
+
+class TestPreCommitBlockRemoval:
+    def test_user_additions_below_our_block_survive(self, initialised, run_cli):
+        hook = initialised / ".git/hooks/pre-commit"
+        run_cli("--root", str(initialised), "install-hooks", "--kind", "git")
+        with hook.open("a", encoding="utf-8") as handle:
+            handle.write('\necho "my own check"\n')
+        run_cli("--root", str(initialised), "restore")
+        assert hook.is_file()
+        text = hook.read_text()
+        assert "my own check" in text
+        assert "agentmeld" not in text
+
+    def test_a_hook_that_is_only_ours_is_deleted(self, initialised, run_cli):
+        run_cli("--root", str(initialised), "install-hooks", "--kind", "git")
+        run_cli("--root", str(initialised), "restore")
+        assert not (initialised / ".git/hooks/pre-commit").exists()
+
+    def test_the_0_1_0_hook_layout_is_still_removable(self, initialised, run_cli):
+        """Upgrades must be able to clean up what an older release wrote."""
+        hook = initialised / ".git/hooks/pre-commit"
+        hook.write_bytes(
+            b"#!/bin/sh\n# agentmeld -- keep AI config mirrors in sync\n"
+            b"if command -v agentmeld >/dev/null 2>&1; then\n"
+            b"    agentmeld sync --quiet || exit 1\n"
+            b"fi\n"
+            b'echo "mine"\n'
+        )
+        run_cli("--root", str(initialised), "restore")
+        text = hook.read_text()
+        assert "mine" in text
+        assert "agentmeld" not in text
+
+
+class TestCommentWarningHasNoSharedState:
+    """Reported by Copilot on PR #4: a module-level set leaked between runs."""
+
+    def test_warning_does_not_persist_into_a_later_plan(self, repo, run_cli):
+        from agentmeld.config import discover_assets, load_config
+        from agentmeld.planner import build_plan, select_adapters
+        from agentmeld.registry import load_registry
+        from agentmeld.state import State
+
+        vscode = repo / ".vscode"
+        vscode.mkdir(parents=True, exist_ok=True)
+        (vscode / "mcp.json").write_bytes(b'{\n  // note\n  "servers": {}\n}')
+        run_cli("--root", str(repo), "init", "--force")
+
+        config = load_config(repo)
+        registry = load_registry()
+        state = State.load(config.state_path)
+        assets = discover_assets(config)
+        adapters = select_adapters(registry, config, state, None)
+
+        first = build_plan(config, assets, adapters, state, "link")
+        assert not any("comment" in w.lower() for w in first.warnings), (
+            "comments are gone after the first sync, so nothing should warn now"
+        )
+        second = build_plan(config, assets, adapters, state, "link")
+        assert first.warnings == second.warnings, "plan building must not accumulate state"
+
+    def test_has_comments_is_a_pure_query(self):
+        from agentmeld.transform.mcp import has_comments
+
+        assert has_comments(b'{\n // hi\n "a": 1\n}')
+        assert not has_comments(b'{"a": 1}')
+        assert not has_comments(None)
+        assert not has_comments(b"not json at all {{{")

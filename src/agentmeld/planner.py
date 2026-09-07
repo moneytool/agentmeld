@@ -104,12 +104,11 @@ def build_plan(
 
             for asset in grouped.get(kind, []):
                 plan.mirrors.extend(
-                    _plan_asset(config, adapter, spec, asset, state, mode)
+                    _plan_asset(config, adapter, spec, asset, state, mode, plan)
                 )
 
     _check_collisions(plan)
     _reject_canonical_targets(plan, config)
-    _report_comment_loss(plan)
     return plan
 
 
@@ -161,8 +160,9 @@ def _plan_instructions(config, adapter, spec, grouped, rules, state, mode) -> Li
     return [mirror]
 
 
-def _plan_asset(config, adapter, spec, asset, state, mode) -> List[Mirror]:
+def _plan_asset(config, adapter, spec, asset, state, mode, plan=None) -> List[Mirror]:
     from .linker import classify
+    from .transform.mcp import has_comments
 
     rendered = spec.render_target(asset.slug)
     target = config.root / rendered
@@ -186,6 +186,11 @@ def _plan_asset(config, adapter, spec, asset, state, mode) -> List[Mirror]:
     payload: Optional[bytes] = None
     if spec.strategy in (Strategy.GENERATE, Strategy.MERGE):
         existing = target.read_bytes() if target.is_file() else None
+        if plan is not None and spec.strategy is Strategy.MERGE and has_comments(existing):
+            plan.warnings.append(
+                "{}: comments in {} cannot survive a JSON rewrite and were "
+                "dropped".format(adapter.id, config.rel(target))
+            )
         ctx = _context(config, asset, adapter.id)
         if spec.strategy is Strategy.MERGE:
             ctx = GenContext(
@@ -229,17 +234,6 @@ def _plan_asset(config, adapter, spec, asset, state, mode) -> List[Mirror]:
             mirrors.append(side)
 
     return mirrors
-
-
-def _report_comment_loss(plan: SyncPlan) -> None:
-    from .transform.mcp import COMMENT_LOSS
-
-    for tool in sorted(COMMENT_LOSS):
-        plan.warnings.append(
-            "{}: comments in the existing config cannot survive a JSON rewrite "
-            "and were dropped".format(tool)
-        )
-    COMMENT_LOSS.clear()
 
 
 def _reject_canonical_targets(plan: SyncPlan, config: Config) -> None:

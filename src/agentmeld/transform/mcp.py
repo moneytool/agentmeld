@@ -22,12 +22,7 @@ from ..model import Asset, KindSpec
 from . import GenContext, register
 from .json_merge import dumps, load_jsonc
 
-__all__ = ["canonical_servers", "SHAPES", "COMMENT_LOSS"]
-
-#: Adapters whose merged config contained comments this run. Comments cannot
-#: survive a JSON rewrite, so the planner reports them rather than dropping them
-#: without a word.
-COMMENT_LOSS = set()
+__all__ = ["canonical_servers", "SHAPES", "has_comments"]
 
 
 def canonical_servers(asset: Asset) -> Dict[str, Any]:
@@ -40,6 +35,23 @@ def canonical_servers(asset: Asset) -> Dict[str, Any]:
     if not isinstance(servers, dict):
         raise ValueError(".ai/mcp.json: 'mcpServers' must be an object")
     return servers
+
+
+def has_comments(existing: Optional[bytes]) -> bool:
+    """Would a rewrite of this file destroy comments?
+
+    Comments can be parsed but not preserved, so the planner asks this and warns.
+    Deliberately a pure query rather than a module-level flag the transformer
+    sets: shared mutable state would leak between runs of a long-lived process
+    such as the watcher.
+    """
+    if not existing:
+        return False
+    try:
+        _, had_comments = load_jsonc(existing.decode("utf-8"))
+    except (ValueError, UnicodeDecodeError):
+        return False
+    return had_comments
 
 
 def _shape_passthrough(server: Mapping[str, Any]) -> Dict[str, Any]:
@@ -83,12 +95,7 @@ def _merge(
 
     document: Dict[str, Any] = {}
     if existing:
-        document, had_comments = load_jsonc(existing.decode("utf-8"))
-        if had_comments:
-            # We can parse comments but cannot preserve them through a rewrite,
-            # so say so. Quietly deleting somebody's notes from their own config
-            # is exactly the kind of thing that loses a tool its users' trust.
-            COMMENT_LOSS.add(ctx.tool)
+        document, _ = load_jsonc(existing.decode("utf-8"))
 
     section = dict(document.get(key) or {})
 

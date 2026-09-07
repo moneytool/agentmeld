@@ -65,7 +65,7 @@ def _materialise(path: Path) -> Tuple[bool, str]:
 
 def _remove_hooks(config: Config, dry_run: bool) -> List[str]:
     """Undo install-hooks, touching only the entries we added."""
-    from .hooks import PRE_COMMIT_MARKER
+    from .hooks import MANAGED_HOOK_COMMANDS, PRE_COMMIT_END, PRE_COMMIT_MARKER
     from .transform.json_merge import dumps, load_jsonc
 
     lines: List[str] = []
@@ -78,10 +78,15 @@ def _remove_hooks(config: Config, dry_run: bool) -> List[str]:
             document = {}
         hooks = document.get("hooks") or {}
         post = hooks.get("PostToolUse") or []
+        # Exact match only. Searching for "agentmeld" anywhere in a command would
+        # also delete a hook the user wrote that happens to call agentmeld.
         kept = [
             group
             for group in post
-            if not any("agentmeld" in (h.get("command") or "") for h in group.get("hooks", []))
+            if not any(
+                (h.get("command") or "").strip() in MANAGED_HOOK_COMMANDS
+                for h in group.get("hooks", [])
+            )
         ]
         if len(kept) != len(post):
             if not dry_run:
@@ -99,26 +104,57 @@ def _remove_hooks(config: Config, dry_run: bool) -> List[str]:
     pre_commit = config.root / ".git" / "hooks" / "pre-commit"
     if pre_commit.is_file():
         text = pre_commit.read_text(encoding="utf-8", errors="replace")
-        if PRE_COMMIT_MARKER in text:
+        stripped = _strip_hook_block(text)
+        if stripped is not None:
             if not dry_run:
-                kept_lines, skipping = [], False
-                for line in text.splitlines(True):
-                    if PRE_COMMIT_MARKER in line:
-                        skipping = True
-                        continue
-                    if skipping and (line.strip() == "" or line.startswith("fi")):
-                        skipping = False
-                        continue
-                    if not skipping:
-                        kept_lines.append(line)
-                remainder = "".join(kept_lines).strip()
-                if remainder in ("", "#!/bin/sh"):
+                if stripped.strip() in ("", "#!/bin/sh"):
                     pre_commit.unlink()
                 else:
-                    pre_commit.write_bytes("".join(kept_lines).encode("utf-8"))
+                    pre_commit.write_bytes(stripped.encode("utf-8"))
             lines.append(".git/hooks/pre-commit: removed the agentmeld block")
 
     return lines
+
+
+def _strip_hook_block(text):
+    """Remove our block from a pre-commit hook, or return None if absent.
+
+    Current hooks are delimited by begin/end markers, so removal is exact and a
+    user's own additions below ours survive. Hooks written by 0.1.0 had only an
+    opening marker, so those fall back to dropping the shell ``if`` block it
+    introduced.
+    """
+    from .hooks import PRE_COMMIT_END, PRE_COMMIT_MARKER
+
+    lines = text.splitlines(True)
+
+    if any(PRE_COMMIT_MARKER in line for line in lines):
+        kept, skipping = [], False
+        for line in lines:
+            if PRE_COMMIT_MARKER in line:
+                skipping = True
+                continue
+            if skipping:
+                if PRE_COMMIT_END in line:
+                    skipping = False
+                continue
+            kept.append(line)
+        return "".join(kept)
+
+    if any("# agentmeld --" in line for line in lines):  # 0.1.0 layout
+        kept, skipping = [], False
+        for line in lines:
+            if "# agentmeld --" in line:
+                skipping = True
+                continue
+            if skipping:
+                if line.startswith("fi"):
+                    skipping = False
+                continue
+            kept.append(line)
+        return "".join(kept)
+
+    return None
 
 
 def _restore_from_backup(config: Config, backup: Path, state: State, dry_run: bool) -> List[str]:

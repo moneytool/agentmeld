@@ -18,17 +18,39 @@ from .model import Adapter
 from .state import State
 from .transform.json_merge import dumps, load_jsonc
 
-__all__ = ["run_install_hooks", "PRE_COMMIT_MARKER"]
+__all__ = [
+    "run_install_hooks",
+    "PRE_COMMIT_MARKER",
+    "PRE_COMMIT_END",
+    "HOOK_COMMAND",
+    "MANAGED_HOOK_COMMANDS",
+]
 
-PRE_COMMIT_MARKER = "# agentmeld"
+PRE_COMMIT_MARKER = "# agentmeld:begin"
+PRE_COMMIT_END = "# agentmeld:end"
+
+#: The exact command install-hooks writes. Removal matches this exactly rather
+#: than searching for "agentmeld" anywhere in a command, which would also delete
+#: a hook the user wrote themselves that happens to call agentmeld.
+HOOK_COMMAND = "agentmeld sync --adopt --quiet"
+
+#: Every command agentmeld has ever installed, so an upgrade can still clean up
+#: after an older version.
+MANAGED_HOOK_COMMANDS = frozenset({HOOK_COMMAND, "agentmeld sync --quiet"})
 
 _PRE_COMMIT = """#!/bin/sh
 {marker} -- keep AI config mirrors in sync
 if command -v agentmeld >/dev/null 2>&1; then
-    agentmeld sync --adopt --quiet || exit 1
+    {command} || exit 1
     git add -A {canonical} 2>/dev/null || true
 fi
-""".format(marker=PRE_COMMIT_MARKER, canonical="{canonical}")
+{end}
+""".format(
+    marker=PRE_COMMIT_MARKER,
+    end=PRE_COMMIT_END,
+    command=HOOK_COMMAND,
+    canonical="{canonical}",
+)
 
 _PRE_COMMIT_CONFIG = """\
 # For repos using the pre-commit framework:
@@ -62,7 +84,7 @@ def _install_claude_hook(config: Config, dry_run: bool) -> str:
 
     hooks = document.setdefault("hooks", {})
     post = hooks.setdefault("PostToolUse", [])
-    command = "agentmeld sync --adopt --quiet"
+    command = HOOK_COMMAND
 
     for group in post:
         for hook in group.get("hooks", []):
@@ -92,7 +114,7 @@ def _install_git_hook(config: Config, dry_run: bool) -> str:
 
     if path.is_file():
         existing = path.read_text(encoding="utf-8", errors="replace")
-        if PRE_COMMIT_MARKER in existing:
+        if PRE_COMMIT_MARKER in existing or "# agentmeld --" in existing:
             return ".git/hooks/pre-commit: already installed"
         if dry_run:
             return ".git/hooks/pre-commit: would append to existing hook"
