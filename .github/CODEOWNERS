@@ -1,0 +1,2 @@
+# Protect release automation and policy changes.
+/.github/workflows/* @moneytool
