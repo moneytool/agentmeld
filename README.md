@@ -7,6 +7,8 @@
 
 **One AI context, every agent.**
 
+![agentmeld demo](assets/agentmeld-demo.gif)
+
 Your repo is used with Claude Code, Copilot, and Cursor. So you maintain
 `CLAUDE.md`, `.github/copilot-instructions.md`, and `.cursor/rules/*.mdc` — three
 copies of the same knowledge, drifting apart. Add a fourth tool, write it a
