@@ -113,6 +113,13 @@ The suite must also pass on the oldest supported Python:
 uv run --python 3.9 --with pytest --with pyyaml --with tomli python -m pytest -q
 ```
 
+## Background
+
+[**Where every AI coding tool keeps its config**](docs/where-ai-coding-tools-keep-their-config.md)
+— the vendor-documentation research this tool is built on: the real paths, the
+frontmatter keys, and the five differences that surprised me. Useful even if you
+never install agentmeld.
+
 ## Why not the existing tools?
 
 [rulesync](https://github.com/dyoshikawa/rulesync) and
