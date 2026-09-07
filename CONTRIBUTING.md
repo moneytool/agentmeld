@@ -70,3 +70,32 @@ cannot be. The symlink fallback is only real because CI exercises it.
 - A file agentmeld did not create is never overwritten; it becomes a conflict.
 - `watch` reaches quiescence — syncing writes into the directories it watches, so
   a change to the loop guards needs a test proving it settles.
+
+## Releasing
+
+The version lives in exactly one place, `src/agentmeld/__init__.py`; `pyproject.toml`
+reads it from there. Never add a second copy — a release that reports a version
+it is not is worse than no release.
+
+1. **Actions → Bump version → Run workflow**, and pick `patch`, `minor` or
+   `major` (or type an explicit `X.Y.Z`). It refuses to go backwards, refuses a
+   version already tagged or already on PyPI, runs the tests, and opens a
+   `Release vX.Y.Z` pull request with the version and CHANGELOG changes.
+2. Review the CHANGELOG entry and merge the pull request.
+3. Push the tag — this is the step that publishes:
+
+   ```bash
+   git checkout main && git pull && git tag vX.Y.Z && git push origin vX.Y.Z
+   ```
+
+`release.yml` then builds and uploads to PyPI using trusted publishing, so no
+token is stored anywhere.
+
+Tagging is left as a separate manual step on purpose. A tag pushed by a workflow
+using the default `GITHUB_TOKEN` does not trigger other workflows, so automating
+it would mean storing a personal access token — more risk than the one command
+it saves.
+
+Note that `v1` is a *moving* tag that only pins the GitHub Action; it is not a
+release. The release workflow matches `v[0-9]+.[0-9]+.[0-9]+` so re-pointing it
+cannot trigger a publish.

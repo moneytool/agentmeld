@@ -1,0 +1,85 @@
+name: Bump version
+
+# Opens a release pull request. It deliberately does not push to main: the
+# repository requires changes to go through a pull request, and a release is
+# exactly the change you least want to bypass review on.
+on:
+  workflow_dispatch:
+    inputs:
+      part:
+        description: "Which component to bump"
+        required: false
+        default: patch
+        type: choice
+        options: [patch, minor, major]
+      version:
+        description: "Explicit X.Y.Z (overrides the choice above)"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Work out the new version
+        id: bump
+        env:
+          PART: ${{ inputs.part }}
+          EXPLICIT: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          if [ -n "${EXPLICIT}" ]; then
+            python3 scripts/bump.py --version "${EXPLICIT}" | tee /tmp/bump.txt
+          else
+            python3 scripts/bump.py --part "${PART}" | tee /tmp/bump.txt
+          fi
+          grep '^current=' /tmp/bump.txt >> "$GITHUB_OUTPUT"
+          grep '^new=' /tmp/bump.txt >> "$GITHUB_OUTPUT"
+
+      - name: Refuse to reuse a version
+        env:
+          NEW: ${{ steps.bump.outputs.new }}
+        run: |
+          set -euo pipefail
+          if git rev-parse "v${NEW}" >/dev/null 2>&1; then
+            echo "::error::tag v${NEW} already exists"
+            exit 1
+          fi
+          code=$(curl -s -o /dev/null -w '%{http_code}' "https://pypi.org/pypi/agentmeld/${NEW}/json")
+          if [ "$code" = "200" ]; then
+            echo "::error::agentmeld ${NEW} is already on PyPI; it cannot be re-uploaded"
+            exit 1
+          fi
+
+      - name: Check the tree is releasable
+        run: |
+          set -euo pipefail
+          pipx install uv >/dev/null 2>&1 || python3 -m pip install --quiet uv
+          uv run --with pytest --with pyyaml --with tomli python -m pytest -q
+
+      - name: Open the release pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT: ${{ steps.bump.outputs.current }}
+          NEW: ${{ steps.bump.outputs.new }}
+        run: |
+          set -euo pipefail
+          branch="release/v${NEW}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add -A
+          git commit -m "Release v${NEW}" -m "Bumps ${CURRENT} -> ${NEW}."
+          git push -u origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "Release v${NEW}" \
+            --body "$(printf 'Bumps \x60%s\x60 to \x60%s\x60.\n\n**Merging this does not publish.** Publishing happens when the tag is pushed:\n\n\x60\x60\x60bash\ngit checkout main && git pull && git tag v%s && git push origin v%s\n\x60\x60\x60\n\nThat fires \x60release.yml\x60, which builds and uploads to PyPI via trusted publishing.\n\nCheck the CHANGELOG entry reads well before merging.\n' "$CURRENT" "$NEW" "$NEW" "$NEW")"
