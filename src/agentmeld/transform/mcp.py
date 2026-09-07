@@ -28,9 +28,14 @@ __all__ = ["canonical_servers", "SHAPES", "has_comments"]
 def canonical_servers(asset: Asset) -> Dict[str, Any]:
     """Read ``.ai/mcp.json``, accepting either a wrapped or bare mapping."""
     text = asset.body if asset.body.strip() else "{}"
-    data = json.loads(text)
+    try:
+        data = json.loads(text)
+    except ValueError as exc:
+        # Without the path this surfaces as a bare "Expecting value: line 1
+        # column 1", which says nothing about which file to go and fix.
+        raise ValueError("{} is not valid JSON: {}".format(asset.path, exc)) from None
     if not isinstance(data, dict):
-        raise ValueError(".ai/mcp.json must contain a JSON object")
+        raise ValueError("{} must contain a JSON object".format(asset.path))
     servers = data.get("mcpServers", data)
     if not isinstance(servers, dict):
         raise ValueError(".ai/mcp.json: 'mcpServers' must be an object")

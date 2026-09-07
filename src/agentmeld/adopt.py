@@ -14,7 +14,8 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 from .config import Config
-from .model import Adapter, AssetKind, KindSpec, Strategy
+from .model import Adapter, AssetKind, Confidence, KindSpec, Strategy
+from .registry import kind_confidence
 from .state import State
 from .transform import HEADER_TOKEN, parse_header
 from .transform import frontmatter as fm
@@ -171,8 +172,21 @@ def adopt_path(
     if hit is None:
         return None
     adapter, spec, slug = hit
-    if spec.strategy is Strategy.MERGE and hit[1].kind is not AssetKind.MCP:
+
+    # Adoption has to respect the same confidence gate as syncing. Pulling
+    # content out of a path we never verified is worse than writing to one:
+    # it moves somebody's file somewhere they did not ask for.
+    if (
+        kind_confidence(adapter, spec.kind) is Confidence.UNVERIFIED
+        and not config.include_unverified
+    ):
         return None
+
+    if spec.strategy is Strategy.MERGE:
+        # A merged target is shared config the user also owns -- .vscode/mcp.json
+        # holds "inputs", .gemini/settings.json holds all of Gemini's settings.
+        # Take a copy of our subtree only, and leave their file where it is.
+        return _adopt_merged_subtree(path, rel, config, adapter, spec, dry_run)
 
     dest = canonical_dest(config, spec.kind, slug)
     if dest.exists():
@@ -195,7 +209,7 @@ def adopt_path(
             config.rel(source_dir), config.rel(dest_dir), adapter.name
         )
 
-    if spec.kind is AssetKind.MCP or path.suffix == ".json":
+    if path.suffix == ".json":
         shutil.move(str(path), str(dest))
     elif path.suffix == ".toml":
         return "{}: adopting TOML commands is not supported yet".format(rel)
@@ -208,6 +222,65 @@ def adopt_path(
 
     state.record_adoption(config.rel(dest), rel, now_iso())
     return "{} -> {} (adopted from {})".format(rel, config.rel(dest), adapter.name)
+
+
+#: Which top-level key each MCP transformer owns inside a shared config file.
+_MCP_KEYS = {
+    "mcp_mcp_servers": "mcpServers",
+    "mcp_servers": "servers",
+    "mcp_context_servers": "context_servers",
+}
+
+#: Keys a vendor shape adds that canonical form should not carry back.
+_VENDOR_SHAPE_KEYS = ("type", "source")
+
+
+def _adopt_merged_subtree(path, rel, config, adapter, spec, dry_run):
+    """Copy our servers out of a shared config file, leaving the file in place."""
+    import json
+
+    from .transform.json_merge import load_jsonc
+
+    key = _MCP_KEYS.get(spec.transformer or "")
+    if key is None:
+        return None
+    try:
+        document, _ = load_jsonc(path.read_text(encoding="utf-8"))
+    except (ValueError, OSError, UnicodeDecodeError):
+        return "{}: not valid JSON, left alone".format(rel)
+
+    servers = document.get(key)
+    if not isinstance(servers, dict) or not servers:
+        return None
+
+    cleaned = {}
+    for name, entry in servers.items():
+        if isinstance(entry, dict):
+            entry = {k: v for k, v in entry.items() if k not in _VENDOR_SHAPE_KEYS}
+        cleaned[name] = entry
+
+    destination = config.canonical / "mcp.json"
+    existing = {}
+    if destination.is_file():
+        try:
+            existing = json.loads(destination.read_text(encoding="utf-8")).get("mcpServers", {})
+        except ValueError:
+            existing = {}
+
+    added = sorted(set(cleaned) - set(existing))
+    if not added:
+        return None
+    if dry_run:
+        return "{}: would take {} server(s): {}".format(rel, len(added), ", ".join(added))
+
+    existing.update(cleaned)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_bytes(
+        (json.dumps({"mcpServers": existing}, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    )
+    return "{}: took {} server(s) into {} (file left in place)".format(
+        rel, len(added), config.rel(destination)
+    )
 
 
 def run_adopt(config: Config, registry, state: State, args) -> int:
