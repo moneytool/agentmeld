@@ -403,3 +403,17 @@ def test_probing_symlink_support_leaves_nothing_behind(repo):
     before = {p.name for p in repo.iterdir()}
     probe_symlink_support(repo)
     assert {p.name for p in repo.iterdir()} == before
+
+
+class TestRootFlagPositions:
+    """`agentmeld init --root .` is what people type; it must not error."""
+
+    def test_root_before_the_subcommand(self, repo, run_cli):
+        assert run_cli("--root", str(repo), "init", "--dry-run") == EXIT_OK
+
+    def test_root_after_the_subcommand(self, repo, run_cli):
+        assert run_cli("init", "--dry-run", "--root", str(repo)) == EXIT_OK
+
+    def test_root_after_the_subcommand_actually_targets_that_repo(self, repo, run_cli):
+        assert run_cli("init", "--root", str(repo)) == EXIT_OK
+        assert (repo / ".ai/instructions.md").is_file()

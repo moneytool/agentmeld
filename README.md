@@ -20,14 +20,57 @@ vendor location — a **real symlink** where the formats agree, a small
 
 ## Install
 
+> **Not on PyPI yet** — the first release is pending. Until then, install straight
+> from this repo (verified working):
+
 ```bash
-uv tool install agentmeld
+uv tool install git+https://github.com/moneytool/agentmeld
 ```
 
-Or `pipx install agentmeld`, or `pip install agentmeld`. `agm` is a shorter
-alias for the same CLI.
+Or try it without installing anything at all:
 
-## Use
+```bash
+uvx --from git+https://github.com/moneytool/agentmeld agentmeld detect
+```
+
+Once published, it will be `uv tool install agentmeld` (or `pipx install
+agentmeld`, or `pip install agentmeld`). `agm` is a shorter alias for the same
+CLI.
+
+## Quickstart
+
+In the repo you actually work in:
+
+```bash
+agentmeld detect
+```
+
+That only reads — it tells you which AI tools it found and what it would manage.
+Then look before you leap:
+
+```bash
+agentmeld init --dry-run
+```
+
+`init` is the one command that moves files, so it shows you the list first. When
+it looks right:
+
+```bash
+agentmeld init
+```
+
+This creates `.ai/`, moves your existing `CLAUDE.md` / `.cursor/rules` / etc. into
+it, backs the originals up to `.ai/.backup/<timestamp>/`, and replaces them with
+mirrors. It refuses to run on a dirty worktree unless you pass `--force`, so
+commit first and the whole thing is one `git checkout` away from undone.
+
+Finally, make it automatic:
+
+```bash
+agentmeld install-hooks
+```
+
+## Commands
 
 ```bash
 agentmeld detect          # which AI tools does this repo actually use?
@@ -39,6 +82,33 @@ agentmeld install-hooks   # auto-sync on agent writes and on commit
 agentmeld watch           # or run a daemon instead
 agentmeld doctor          # drift, conflicts, orphans, dropped keys
 agentmeld list-adapters   # the support matrix, with confidence levels
+```
+
+Every command that writes accepts `--dry-run`. `--include-unverified` opts into
+paths not confirmed against vendor docs.
+
+## Working on agentmeld itself
+
+```bash
+git clone https://github.com/moneytool/agentmeld && cd agentmeld
+```
+
+```bash
+uv sync
+```
+
+```bash
+uv run pytest
+```
+
+```bash
+uv run agentmeld --help
+```
+
+The suite must also pass on the oldest supported Python:
+
+```bash
+uv run --python 3.9 --with pytest --with pyyaml --with tomli python -m pytest -q
 ```
 
 ## Why not the existing tools?

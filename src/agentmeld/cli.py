@@ -207,7 +207,21 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--version", action="version", version="agentmeld " + __version__)
     parser.add_argument("--root", help="repo root (default: nearest .git or .ai ancestor)")
+
+    # --root is also accepted *after* the subcommand, because `agentmeld init
+    # --root .` is what people naturally type. SUPPRESS keeps the subcommand copy
+    # from overwriting a value given before the subcommand with None.
+    positional_root = argparse.ArgumentParser(add_help=False)
+    positional_root.add_argument("--root", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+
     sub = parser.add_subparsers(dest="command", required=True)
+    _original_add_parser = sub.add_parser
+
+    def add_parser(name, **kwargs):
+        kwargs.setdefault("parents", [positional_root])
+        return _original_add_parser(name, **kwargs)
+
+    sub.add_parser = add_parser
 
     def common(p):
         p.add_argument(
