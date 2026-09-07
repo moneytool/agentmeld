@@ -1,5 +1,5 @@
 name: agentmeld
-description: Keep one canonical copy of your AI instructions, rules, skills, agents, commands and MCP config, mirrored to every AI tool.
+description: "Keep one canonical copy of your AI instructions, rules, skills, agents, commands and MCP config, mirrored to every AI tool."
 branding:
   icon: link
   color: purple
@@ -9,7 +9,7 @@ inputs:
     required: false
     default: sync --check
   version:
-    description: Version of agentmeld to install (default: latest).
+    description: "Version of agentmeld to install (default: latest release)."
     required: false
     default: ""
   working-directory:
@@ -21,9 +21,22 @@ runs:
   steps:
     - name: Install agentmeld
       shell: bash
+      env:
+        REQUESTED_VERSION: ${{ inputs.version }}
       run: |
-        python3 -m pip install --quiet --upgrade \
-          "agentmeld${{ inputs.version && format('=={0}', inputs.version) || '' }}"
+        set -euo pipefail
+        if [ -n "${REQUESTED_VERSION}" ]; then
+          python3 -m pip install --quiet --upgrade "agentmeld==${REQUESTED_VERSION}"
+        elif python3 -m pip install --quiet --upgrade agentmeld; then
+          : # released on PyPI
+        else
+          # Not published yet (or PyPI unreachable): fall back to this repository,
+          # so the action works before the first release rather than failing with
+          # a confusing "no matching distribution" error.
+          echo "agentmeld not installable from PyPI; installing from ${GITHUB_ACTION_REPOSITORY:-moneytool/agentmeld}" >&2
+          python3 -m pip install --quiet \
+            "git+https://github.com/${GITHUB_ACTION_REPOSITORY:-moneytool/agentmeld}"
+        fi
     - name: Run agentmeld
       shell: bash
       working-directory: ${{ inputs.working-directory }}

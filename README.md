@@ -176,10 +176,13 @@ notices for a week**, whereas a failing CI check cannot be silently lost.
 In CI, via the bundled action:
 
 ```yaml
-- uses: moneytool/agentmeld@v1
+- uses: moneytool/agentmeld@main
   with:
     args: sync --check
 ```
+
+(Pin to `@v1` once the first release is tagged. Before agentmeld is on PyPI the
+action installs itself from this repository, so it works either way.)
 
 ### Adoption, not just generation
 
