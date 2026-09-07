@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.1.1] - 2026-09-07
+
 ## [0.1.0] - 2026-09-07
 
 First release. https://pypi.org/project/agentmeld/
