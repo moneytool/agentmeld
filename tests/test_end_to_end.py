@@ -417,3 +417,73 @@ class TestRootFlagPositions:
     def test_root_after_the_subcommand_actually_targets_that_repo(self, repo, run_cli):
         assert run_cli("init", "--root", str(repo)) == EXIT_OK
         assert (repo / ".ai/instructions.md").is_file()
+
+
+class TestInertRuleDetection:
+    """21.4% of rules sampled from 120 public repos had no activation path.
+
+    See docs/research/findings/03-dead-rules.md. A rule with no globs, no
+    always, and no description is never loaded by anything -- and looks fine.
+    """
+
+    def _rule(self, repo, name, body):
+        path = repo / ".ai/rules" / (name + ".md")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(body.encode("utf-8"))
+        return path
+
+    def _section(self, out):
+        """Just the 'can never load' section -- a filename also appears under
+        drift, so asserting against the whole output proves nothing."""
+        marker = "rules that can never load"
+        if marker not in out:
+            return ""
+        after = out.split(marker, 1)[1]
+        # sections are separated by a blank line following the dashed underline
+        body = after.split("\n\n", 1)[0]
+        return body
+
+    def test_a_rule_with_no_activation_path_is_reported(self, repo, run_cli, capsys):
+        run_cli("--root", str(repo), "init")
+        self._rule(repo, "inert", "---\nname: inert\n---\nSome guidance.\n")
+        run_cli("--root", str(repo), "doctor")
+        out = capsys.readouterr().out
+        assert "can never load" in out
+        assert "inert.md" in self._section(out)
+
+    def test_globs_make_it_loadable(self, repo, run_cli, capsys):
+        run_cli("--root", str(repo), "init")
+        self._rule(repo, "scoped", "---\nglobs:\n  - 'src/**'\n---\nGuidance.\n")
+        run_cli("--root", str(repo), "doctor")
+        assert "scoped.md" not in self._section(capsys.readouterr().out)
+
+    def test_always_makes_it_loadable(self, repo, run_cli, capsys):
+        run_cli("--root", str(repo), "init")
+        self._rule(repo, "alwayson", "---\nalways: true\n---\nGuidance.\n")
+        run_cli("--root", str(repo), "doctor")
+        assert "alwayson.md" not in self._section(capsys.readouterr().out)
+
+    def test_description_alone_makes_it_loadable(self, repo, run_cli, capsys):
+        """Tools that pick rules by relevance need only a description."""
+        run_cli("--root", str(repo), "init")
+        self._rule(repo, "described", "---\ndescription: When writing tests\n---\nG.\n")
+        run_cli("--root", str(repo), "doctor")
+        assert "described.md" not in self._section(capsys.readouterr().out)
+
+    def test_empty_globs_list_does_not_count_as_loadable(self, repo, run_cli, capsys):
+        """The exact shape found in the wild: the key is present but empty."""
+        run_cli("--root", str(repo), "init")
+        self._rule(repo, "emptyglobs", "---\ndescription: ''\nglobs:\n---\nG.\n")
+        run_cli("--root", str(repo), "doctor")
+        assert "emptyglobs.md" in self._section(capsys.readouterr().out)
+
+    def test_the_fix_is_suggested(self, repo, run_cli, capsys):
+        run_cli("--root", str(repo), "init")
+        self._rule(repo, "inert2", "---\nname: x\n---\nG.\n")
+        run_cli("--root", str(repo), "doctor")
+        assert "add globs" in capsys.readouterr().out
+
+    def test_a_healthy_repo_reports_nothing(self, repo, run_cli, capsys):
+        run_cli("--root", str(repo), "init")
+        run_cli("--root", str(repo), "doctor")
+        assert "can never load" not in capsys.readouterr().out
