@@ -12,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
-      contents: read
+      # creating the GitHub Release needs write
+      contents: write
       # Trusted publishing: no API token stored anywhere.
       id-token: write
     steps:
@@ -48,3 +49,22 @@ jobs:
       - run: uv build
       - name: Publish to PyPI
         run: uv publish --trusted-publishing always
+
+      - name: Create the GitHub Release
+        # Without this, tags ship to PyPI but the repo sidebar keeps advertising
+        # whatever version was last released by hand -- which is worse than no
+        # release at all, because it points people at an older version.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            echo "release ${GITHUB_REF_NAME} already exists"
+            exit 0
+          fi
+          gh release create "${GITHUB_REF_NAME}" \
+            --latest \
+            --title "agentmeld ${GITHUB_REF_NAME#v}" \
+            --generate-notes \
+            --notes-start-tag "$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || echo "${GITHUB_REF_NAME}")" \
+            --notes "$(printf '\x60\x60\x60bash\nuv tool install agentmeld\n\x60\x60\x60\n\nFull changelog: https://github.com/${GITHUB_REPOSITORY}/blob/main/CHANGELOG.md\n')"
