@@ -25,7 +25,28 @@ permissions:
 jobs:
   bump:
     runs-on: ubuntu-latest
+    # Three-layer guard, evaluated before any step runs:
+    #   1. dispatched from the main branch (workflow_dispatch sets ref to the
+    #      selected branch; a dispatch off any other ref is refused)
+    #   2. the person who clicked "Run workflow" is the repo owner
+    #   3. and they actually hold admin permission (defends against a stale
+    #      allowlist if the repo later gains collaborators or moves to an org)
+    if: >-
+      github.ref == 'refs/heads/main'
+      && github.triggering_actor == 'moneytool'
+      && github.event.sender.login == 'moneytool'
     steps:
+      - name: Verify caller holds admin on this repo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          perm="$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/${{ github.triggering_actor }}/permission" --jq .permission)"
+          if [ "$perm" != "admin" ]; then
+            echo "::error::${{ github.triggering_actor }} has '$perm', not admin — refusing to bump"
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
