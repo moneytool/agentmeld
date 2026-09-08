@@ -90,7 +90,7 @@ def run_doctor(config: Config, registry: Dict[str, Adapter], state: State, args)
 
     inert = _inert_rules(assets)
     if inert:
-        _heading("rules that can never load")
+        _heading("rules that never load automatically")
         for line in inert:
             print(line)
 
@@ -117,16 +117,21 @@ def run_doctor(config: Config, registry: Dict[str, Adapter], state: State, args)
 
 
 def _inert_rules(assets) -> List[str]:
-    """Rules with no activation path at all.
+    """Rules that no automatic trigger can reach.
 
-    A rule loads when a glob matches the file being edited, when it is marked
-    always, or -- in tools that decide by relevance -- when its description gives
-    the agent something to judge. With none of the three, nothing can trigger it:
-    the file sits in the repo looking like configuration and is never read.
+    A rule loads automatically when a glob matches the file being edited, when it
+    is marked always, or -- in tools that decide by relevance -- when its
+    description gives the agent something to judge. With none of the three, the
+    only way in is an explicit mention: Cursor calls this the "Apply Manually"
+    rule type, included when you @-mention it in chat.
 
-    Measured at 21.4% of 1,001 rule files sampled from 120 public repositories,
-    so this is a common mistake rather than a hypothetical one -- and it is
-    invisible without a check like this, because the file looks perfectly fine.
+    So this is a question, not a verdict. Some of these are deliberate; some are
+    rules whose author believed they were scoped and never noticed otherwise.
+    Frontmatter alone cannot tell the two apart, which is why the wording asks
+    rather than accuses.
+
+    21.4% of 1,001 rule files sampled from 120 public repositories are in this
+    state -- high enough that the ones written by accident are worth surfacing.
     """
     lines = []
     for asset in assets:
@@ -139,10 +144,10 @@ def _inert_rules(assets) -> List[str]:
             continue
         lines.append("{}".format(asset.path.name))
         lines.append(
-            "    no globs, always is not set, no description -- nothing will load this"
+            "    no globs, no always, no description -- loads only if you @-mention it"
         )
         lines.append(
-            "    fix: add globs, set always: true, or write a description"
+            "    if that was not intended: add globs, set always: true, or a description"
         )
     return lines
 

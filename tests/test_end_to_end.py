@@ -420,10 +420,11 @@ class TestRootFlagPositions:
 
 
 class TestInertRuleDetection:
-    """21.4% of rules sampled from 120 public repos had no activation path.
+    """21.4% of rules sampled from 120 public repos have no automatic trigger.
 
-    See docs/research/findings/03-dead-rules.md. A rule with no globs, no
-    always, and no description is never loaded by anything -- and looks fine.
+    Such a rule is Cursor's documented "Apply Manually" type: it loads when
+    @-mentioned. Some are deliberate. The check surfaces them as a question,
+    because frontmatter cannot distinguish intent from oversight.
     """
 
     def _rule(self, repo, name, body):
@@ -435,7 +436,7 @@ class TestInertRuleDetection:
     def _section(self, out):
         """Just the 'can never load' section -- a filename also appears under
         drift, so asserting against the whole output proves nothing."""
-        marker = "rules that can never load"
+        marker = "rules that never load automatically"
         if marker not in out:
             return ""
         after = out.split(marker, 1)[1]
@@ -448,7 +449,7 @@ class TestInertRuleDetection:
         self._rule(repo, "inert", "---\nname: inert\n---\nSome guidance.\n")
         run_cli("--root", str(repo), "doctor")
         out = capsys.readouterr().out
-        assert "can never load" in out
+        assert "never load automatically" in out
         assert "inert.md" in self._section(out)
 
     def test_globs_make_it_loadable(self, repo, run_cli, capsys):
@@ -481,9 +482,21 @@ class TestInertRuleDetection:
         run_cli("--root", str(repo), "init")
         self._rule(repo, "inert2", "---\nname: x\n---\nG.\n")
         run_cli("--root", str(repo), "doctor")
-        assert "add globs" in capsys.readouterr().out
+        assert "@-mention" in capsys.readouterr().out
 
     def test_a_healthy_repo_reports_nothing(self, repo, run_cli, capsys):
         run_cli("--root", str(repo), "init")
         run_cli("--root", str(repo), "doctor")
-        assert "can never load" not in capsys.readouterr().out
+        assert "never load automatically" not in capsys.readouterr().out
+
+    def test_wording_does_not_claim_the_rule_is_unreachable(self, repo, run_cli, capsys):
+        """Cursor's "Apply Manually" type has exactly this frontmatter and loads
+        on @-mention. Claiming it can never load is factually wrong."""
+        run_cli("--root", str(repo), "init")
+        self._rule(repo, "manual", "---\nname: manual\n---\nInvoke me deliberately.\n")
+        run_cli("--root", str(repo), "doctor")
+        out = capsys.readouterr().out
+        assert "never load automatically" in out
+        assert "@-mention" in out
+        for wrong in ("nothing will load", "can never load", "will never be read"):
+            assert wrong not in out
