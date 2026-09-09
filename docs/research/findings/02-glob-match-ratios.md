@@ -3,6 +3,11 @@
 **Date:** 2026-09-08 · **Status:** stable across sample sizes
 **Data:** `data/glob-ratios.json` · **Collector:** `scripts/collect-glob-ratios.py`
 
+> **Superseded for prevalence.** The rates here come from a GitHub code-search
+> sample, which only returns repos that already contain the file being counted.
+> They describe *adopters*, not repositories in general. For population rates see
+> [finding 07](07-prevalence-stratified.md).
+
 ## Question
 
 Scoped rules (Cursor's `globs:`, Copilot's `applyTo:`) load only when the agent

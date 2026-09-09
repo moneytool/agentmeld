@@ -3,6 +3,11 @@
 **Date:** 2026-09-08 · **Status:** preliminary
 **Data:** `data/stale-globs.json` · **Collector:** `scripts/collect-stale-globs.py`
 
+> **Superseded for prevalence.** The rates here come from a GitHub code-search
+> sample, which only returns repos that already contain the file being counted.
+> They describe *adopters*, not repositories in general. For population rates see
+> [finding 07](07-prevalence-stratified.md).
+
 ## The finding
 
 Of 255 rules that *do* carry globs, across 60 public repositories, **14.9% match

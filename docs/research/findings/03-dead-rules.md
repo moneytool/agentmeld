@@ -1,7 +1,12 @@
 # Finding 3: ~21% of real-world rules never load automatically
 
-**Date:** 2026-09-08 · **Status:** strongest result of the programme
+**Date:** 2026-09-08 · **Status:** strongest result among adopters; frame cannot support a population claim
 **Data:** `data/glob-ratios.json` (`rulestats`) · **Collector:** `scripts/collect-glob-ratios.py`
+
+> **Superseded for prevalence.** The rates here come from a GitHub code-search
+> sample, which only returns repos that already contain the file being counted.
+> They describe *adopters*, not repositories in general. For population rates see
+> [finding 07](07-prevalence-stratified.md).
 
 ## The finding
 

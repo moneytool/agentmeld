@@ -1,0 +1,65 @@
+{
+  "bands": {
+    "500-2000": {
+      "n": 788,
+      "any": 138,
+      "AGENTS.md": 93,
+      "copilot_root": 15,
+      "CLAUDE.md": 79,
+      "cursor_rules": 8,
+      "GEMINI.md": 3
+    },
+    "60-150": {
+      "n": 800,
+      "any": 138,
+      "CLAUDE.md": 73,
+      "AGENTS.md": 89,
+      "copilot_root": 23,
+      "cursor_rules": 5,
+      "GEMINI.md": 5,
+      "copilot_rules": 2
+    },
+    "2000-1000000": {
+      "n": 326,
+      "any": 105,
+      "CLAUDE.md": 66,
+      "AGENTS.md": 80,
+      "cursor_rules": 8,
+      "copilot_root": 8,
+      "copilot_rules": 2,
+      "GEMINI.md": 1
+    },
+    "25-60": {
+      "n": 800,
+      "any": 90,
+      "CLAUDE.md": 62,
+      "AGENTS.md": 49,
+      "copilot_root": 18,
+      "cursor_rules": 10,
+      "GEMINI.md": 4,
+      "copilot_rules": 1
+    },
+    "150-500": {
+      "n": 800,
+      "any": 119,
+      "CLAUDE.md": 55,
+      "copilot_root": 12,
+      "AGENTS.md": 89,
+      "cursor_rules": 7,
+      "copilot_rules": 1,
+      "GEMINI.md": 3
+    },
+    "10-25": {
+      "n": 800,
+      "any": 76,
+      "GEMINI.md": 3,
+      "AGENTS.md": 44,
+      "CLAUDE.md": 44,
+      "copilot_root": 8,
+      "copilot_rules": 2,
+      "cursor_rules": 3
+    }
+  },
+  "frame_fingerprint_sha256_16": "8fd846e908911bf9",
+  "n_probed": 4314
+}

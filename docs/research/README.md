@@ -1,7 +1,7 @@
 # agentmeld research
 
-Working notes, datasets and collectors behind agentmeld. **Local and
-uncommitted** — this is a lab notebook, not documentation.
+Working notes, datasets and collectors behind agentmeld — a lab notebook, not
+documentation. Kept on the `research` branch, off `main`.
 
 Everything here is preliminary unless a document says otherwise. Sample sizes
 and sampling bias are stated in each file; read the caveats before quoting a
@@ -13,10 +13,17 @@ number.
 |---|---|---|---|
 | [01](findings/01-config-fragmentation.md) | Repos carry multiple AI configs and they diverge | 35% carry 2+; 20% of those already symlink | preliminary, n=150 |
 | [02](findings/02-glob-match-ratios.md) | A typical edit loads ~32% of the rule set | median 31.9%; only 7% of repos below the 10% break-even | stable across n=21→120 |
-| [03](findings/03-dead-rules.md) | ~21% of rules can never load | 207 of 1,001 rules have no activation path | **strongest result** |
+| [03](findings/03-dead-rules.md) | ~21% of rules have no automatic trigger | 207 of 1,001 rules; loads only on @-mention | strong among adopters |
 | [04](findings/04-caching-economics.md) | Loading less context can cost more | scoping loses for ~72% of repos on a warm cache | analysis + 1 external run |
 | [05](findings/05-stale-globs.md) | Scoped rules that match nothing | 14.9% of scoped rules match zero files | preliminary, n=60 |
 | [06](findings/06-adherence.md) | Rule count does not affect adherence; models barely differ | all 9 cells within 96.4-100% | **most carefully checked** |
+| [07](findings/07-prevalence-stratified.md) | How common AI config actually is | 12.3% of active repos; 9.5%→32.2% by stars; `AGENTS.md` has overtaken `CLAUDE.md` | **primary result**; frozen frame, n=4,314 |
+
+Finding **07 supersedes the prevalence rates in 01–03 and 05**. Those were
+measured on a GitHub code-search sample, which by construction only returns repos
+that already have the file being counted — fine for describing adopters, useless
+for estimating how many adopters there are. 07 uses a frozen, fingerprinted
+probability frame with population weights.
 
 ## Problem statements
 
@@ -45,6 +52,7 @@ scripts/    the collectors themselves, re-runnable
 
 | Dataset | Rows | Collector |
 |---|---|---|
+| `data/probe-slice-{a,b}.json` | 4,314 repos | `sampling/probe-frame.py` (analysis: `scripts/analyze-prevalence.py`) |
 | `data/config-cooccurrence.json` | 150 repos probed | `scripts/collect-config-cooccurrence.py` |
 | `data/config-cooccurrence-typed.json` | multi-config repos, file types resolved | — |
 | `data/glob-ratios.json` | 120 repos / 1,001 rules | `scripts/collect-glob-ratios.py` |

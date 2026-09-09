@@ -3,6 +3,11 @@
 **Date:** 2026-09-08 · **Status:** preliminary · **Data:** `data/config-cooccurrence.json`
 **Collector:** `scripts/collect-config-cooccurrence.py`
 
+> **Superseded for prevalence.** The rates here come from a GitHub code-search
+> sample, which only returns repos that already contain the file being counted.
+> They describe *adopters*, not repositories in general. For population rates see
+> [finding 07](07-prevalence-stratified.md).
+
 ## Question
 
 Do repositories carry configuration for more than one AI coding assistant, and

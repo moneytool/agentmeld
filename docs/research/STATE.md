@@ -1,4 +1,4 @@
-# Project state — 2026-09-08
+# Project state — 2026-09-08 (probe complete)
 
 Written so this work can be resumed cold. Everything here is fact, with the
 uncertain parts marked.
@@ -7,7 +7,7 @@ uncertain parts marked.
 
 ## Shipped
 
-**agentmeld 0.1.3** on PyPI. https://github.com/moneytool/agentmeld
+**agentmeld 0.1.4** on PyPI. https://github.com/moneytool/agentmeld
 
 | Version | Contents |
 |---|---|
@@ -15,10 +15,7 @@ uncertain parts marked.
 | 0.1.1 | data-loss fix; `agentmeld restore`; JSONC comment warning; exact-match hook removal |
 | 0.1.2 | Gemini TOML command adoption (completes the round trip) |
 | 0.1.3 | `doctor` reports rules with no automatic trigger |
-
-**On `main` but unreleased:** the corrected `doctor` wording (PR #17). 0.1.3 on
-PyPI still says "nothing will load this", which is factually wrong — see
-finding 03. Cut 0.1.4 when convenient.
+| 0.1.4 | corrected `doctor` wording — those rules are *manual*, not dead (PR #17) |
 
 ### Repo gotchas
 
@@ -45,12 +42,13 @@ transferable part.
 
 | # | Finding | Confidence |
 |---|---|---|
-| 01 | 35% of repos carry 2+ configs; 20% of those already symlink | preliminary, biased frame |
+| 01 | 35% of repos carry 2+ configs; 20% of those already symlink | frame biased; **the 35% is confirmed on the good frame** as 34.6% *of adopters* — see 07 |
 | 02 | median 31.9% of a rule set matches a typical file | **frame is wrong — see below** |
 | 03 | 21.4% of rules have no automatic trigger | **frame is wrong**; claim already corrected once |
 | 04 | scoping can cost more than monolithic under caching | analysis; **recommend cutting from any paper** |
 | 05 | 14.9% of scoped rules match nothing | **frame is wrong**; own parser bug corrected once |
 | 06 | rule count does not affect adherence; models barely differ | **most carefully checked**; 135 runs, code stored |
+| 07 | **12.3% of active repos carry AI config; 9.5% → 32.2% by stars; `AGENTS.md` > `CLAUDE.md`** | **primary result**; frozen frame, n=4,314, stratified + weighted |
 
 ### The frame problem (important)
 
@@ -94,9 +92,15 @@ hidden.
    and stopped rather than working around it. The fix was realising the search
    response already returns `total_count`, making the whole count phase redundant.
 
-**In flight at time of writing:** two agents probing the frozen sample
-(4,314 repos, up to 800 per band) into `/tmp/frame3/probed_a.json` and
-`probed_b.json`. Not yet copied into this folder.
+**Probe complete.** Two agents probed 4,314 repos in disjoint slices (verified
+0 overlap) into `data/probe-slice-{a,b}.json`, summarised in
+`data/probe-summary.json`. Results are finding **07**, which supersedes the
+prevalence numbers in 01–03/05.
+
+The 10-25 band enumerated 7,463 of GitHub's reported 10,422 (71.6%); every other
+band is >=99.8%, and the two smallest were probed as a **census**. Finding 07
+reports the estimate under both weighting schemes (12.3% vs 12.7%) so this
+coverage gap is visible rather than assumed away.
 
 ---
 
@@ -119,8 +123,10 @@ errors are not made twice.
 
 Recommended shape, if pursued:
 
-- **One claim**, not four. Either the adoption study (prevalence by star band,
-  from the new frame) or the defect study (among scoped-rule users). Not both.
+- **One claim**, not four. The adoption study is now the stronger candidate:
+  finding 07 has a frozen, fingerprinted frame, a weighted estimator, a 3.4x
+  monotonic gradient, and a standard-displacement result (`AGENTS.md` overtaking
+  `CLAUDE.md`). The defect study rests on a frame that guarantees its own subject.
 - Venue: **MSR**, deadline typically December-January.
 - Cut finding 04 (vendor pricing, dates fast).
 - Finding 06 works as a secondary section.
@@ -156,11 +162,17 @@ years. It is a credential, not a lever.
 
 ## Outstanding
 
-1. Copy probe results here when the agents finish; compute the **weighted**
-   prevalence and per-band rates
-2. Recompute findings 02/03/05 on the new frame, or re-scope their claims
-3. Yank 0.1.0 from PyPI (data-loss bug)
-4. Cut 0.1.4 (the corrected `doctor` wording is on main, not on PyPI)
+1. **Measure the `AGENTS.md` + `CLAUDE.md` pair (170 repos in the sample).** How
+   many have `CLAUDE.md` as a thin `@AGENTS.md` import rather than a duplicate?
+   This is the single most important open number: it separates agentmeld's real
+   addressable problem from a problem the ecosystem already solved in one line.
+   Watch for the symlink-pointer trap — `raw.githubusercontent` serves the link
+   *target text* for a symlink, which once produced a bogus divergence figure.
+2. Fix `has_file`: distinguish 404 from exception and retry once, so a network
+   error stops being indistinguishable from absence. Do this before finding 07 is
+   cited anywhere.
+3. Recompute findings 02/03/05 on the new frame, or re-scope their claims
+4. Yank 0.1.0 from PyPI (data-loss bug) — needs the owner's PyPI login
 5. Fix the bump workflow (drop `gh pr create`)
 6. Trim the 51-second README demo GIF to ~20s
 7. Manually inspect Gemini's `annotations` 80% — the last unexplained
