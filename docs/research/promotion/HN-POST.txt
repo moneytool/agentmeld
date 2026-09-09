@@ -1,0 +1,74 @@
+================================================================
+HACKER NEWS SUBMISSION
+Go to: https://news.ycombinator.com/submit
+Best time: Tue-Thu, 7:30-9:00am US Central (8:30-10:00am Eastern)
+================================================================
+
+TITLE  (paste exactly — 42 chars, no "Show HN:")
+
+Where every AI coding tool keeps its config
+
+
+URL  (paste exactly)
+
+https://github.com/moneytool/agentmeld/blob/main/docs/where-ai-coding-tools-keep-their-config.md
+
+
+TEXT FIELD
+
+Leave completely empty. HN only allows a URL or text, not both.
+
+
+================================================================
+THEN: post this as the FIRST COMMENT on your own submission,
+immediately after submitting.
+================================================================
+
+Author here. I wrote this after losing an afternoon to the first item on the
+list — a rule file sitting in .cursor/rules doing absolutely nothing, because
+Cursor only reads .mdc there and ignores .md silently.
+
+Every path in the post is checked against the vendor's own documentation and
+linked, because searching for this returns a remarkable amount of
+AI-generated filler that contradicts itself. Where I could not confirm
+something at the source I say so rather than guessing.
+
+The Gemini detail is the one I find most interesting structurally: because its
+commands are TOML with a "prompt" key rather than Markdown, the container
+format differs and not just the field names. That rules out solving this with
+symlinks alone, which is annoying, because symlinks otherwise solve most of it
+cleanly.
+
+Disclosure: I did end up building a tool for this and it is linked at the end
+of the post. rulesync and ruler are both more mature and support far more
+tools; I mention them in the piece for that reason. The post stands on its own
+whether or not anyone touches mine.
+
+Happy to be corrected on any of the paths — these formats move quickly.
+
+
+================================================================
+IF SOMEONE ASKS "why not just use rulesync?"
+================================================================
+
+rulesync is more mature and supports 40+ tools. If breadth is what you need,
+use it. Mine does two things differently: it symlinks instead of generating
+copies, so editing any mirror edits the source rather than being overwritten
+on the next run, and it syncs automatically via hooks or a watcher rather than
+when you remember. The tradeoff is deliberate: six tools verified against
+vendor docs instead of forty.
+
+
+================================================================
+LATER (separate day, low expectations): the Show HN
+================================================================
+
+Statistically these score 1-4 points for config tools — rulesync has never
+cracked 2 points across five submissions despite 5M downloads. Post it anyway
+once, but do not treat it as the launch.
+
+TITLE:
+Show HN: Agentmeld – One AI config file, symlinked into every coding assistant
+
+URL:
+https://github.com/moneytool/agentmeld

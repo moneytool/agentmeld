@@ -1,0 +1,49 @@
+If your repo is used with more than one AI coding assistant, you are probably
+maintaining the same knowledge three times.
+
+Claude Code reads CLAUDE.md. GitHub Copilot reads .github/copilot-instructions.md.
+Cursor reads .cursor/rules/*.mdc. Same guidance, three files, drifting apart —
+and adding a fourth tool means writing it a fourth time.
+
+I spent a weekend reading the actual vendor documentation for six of these tools.
+The differences are sharper than I expected:
+
+→ Cursor ignores plain .md files inside .cursor/rules — they must be .mdc
+→ Gemini CLI commands are TOML with a "prompt" key, not Markdown
+→ Copilot scopes rules with applyTo:, Cursor with globs: and alwaysApply:
+→ MCP server config comes in three incompatible schemas: mcpServers (Claude),
+  servers (VS Code), context_servers (Zed)
+
+So I built agentmeld. One canonical copy in .ai/, mirrored into every tool's own
+location — a real symlink where the formats agree, a generated file where they
+genuinely differ. Edit any mirror and you have edited the source. A file one
+agent writes gets adopted back and fanned out to the others automatically, via a
+git hook, an editor hook, or a watcher.
+
+  pip install agentmeld
+
+Three things I made myself do properly, because this tool moves people's files:
+
+1. Every vendor path is marked verified or unverified against that vendor's own
+   documentation. Unverified paths are excluded from syncing unless you opt in.
+   A tool that reorganises your repo should not act on a guess.
+
+2. There is a way back out. "agentmeld restore" turns every mirror into a real
+   file and steps out of the way, or restores your original files exactly as
+   they were before you started.
+
+3. It is tested on Linux, macOS and Windows across Python 3.9 to 3.13 — 190
+   tests, plus scenario testing against the published package rather than only
+   the source.
+
+Honest about scope: it supports six tools, not forty. If you want the widest
+coverage, rulesync is excellent and supports 40+. agentmeld exists for the two
+things it does differently — symlinks instead of copies, and syncing that
+happens automatically instead of when you remember.
+
+MIT licensed. Feedback and pull requests welcome, especially from anyone who
+knows a tool's config layout better than its docs do.
+
+https://github.com/moneytool/agentmeld
+
+#AI #DeveloperTools #OpenSource #Python #SoftwareEngineering

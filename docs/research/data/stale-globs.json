@@ -1,0 +1,137 @@
+{
+ "stats": {
+  "repos": 110,
+  "scoped": 609,
+  "missing_globstar": 14,
+  "path_absent": 68,
+  "repos_affected": 29
+ },
+ "examples": {
+  "missing_globstar": [
+   {
+    "repo": "AIDotNet/koala-ai",
+    "rule": "ui.mdc",
+    "globs": [
+     "*.tsx",
+     "*.css",
+     "*.html"
+    ]
+   },
+   {
+    "repo": "JamesonRGrieve/ServerFramework",
+    "rule": "dates.mdc",
+    "globs": [
+     "*.py"
+    ]
+   },
+   {
+    "repo": "JamesonRGrieve/ServerFramework",
+    "rule": "src.mdc",
+    "globs": [
+     "*.py"
+    ]
+   },
+   {
+    "repo": "Kele-Bingtang/teek-design-vue3",
+    "rule": "ui.mdc",
+    "globs": [
+     "*.vue",
+     "*.scss"
+    ]
+   },
+   {
+    "repo": "Macavity/mapeditor",
+    "rule": "laravel.mdc",
+    "globs": [
+     "*.php"
+    ]
+   },
+   {
+    "repo": "NoDeskAI/browser-pilot",
+    "rule": "keyboard-shortcuts-ux.mdc",
+    "globs": [
+     "*.vue",
+     "*.ts",
+     "*.tsx"
+    ]
+   },
+   {
+    "repo": "NoDeskAI/browser-pilot",
+    "rule": "ux-ui-daynight.mdc",
+    "globs": [
+     "*.vue",
+     "*.ts",
+     "*.tsx"
+    ]
+   },
+   {
+    "repo": "PiotrGrobelak/techno-ambassador",
+    "rule": "astro.mdc",
+    "globs": [
+     "*.astro"
+    ]
+   }
+  ],
+  "path_absent": [
+   {
+    "repo": "ASISaga/aurelion.asisaga.com",
+    "rule": "azure-functions.instructions.md",
+    "globs": [
+     "src/**/*.py",
+     "function_app.py",
+     "tests/**/*.py"
+    ]
+   },
+   {
+    "repo": "ASISaga/aurelion.asisaga.com",
+    "rule": "github-docs.instructions.md",
+    "globs": [
+     ".github/docs/*.md"
+    ]
+   },
+   {
+    "repo": "ASISaga/aurelion.asisaga.com",
+    "rule": "python.instructions.md",
+    "globs": [
+     "**/*.py"
+    ]
+   },
+   {
+    "repo": "Ags-mites/demoblaze-api-testing",
+    "rule": "backend.instructions.md",
+    "globs": [
+     "backend/**/*.py"
+    ]
+   },
+   {
+    "repo": "Ags-mites/demoblaze-api-testing",
+    "rule": "frontend.instructions.md",
+    "globs": [
+     "frontend/src/**/*.{js,jsx}"
+    ]
+   },
+   {
+    "repo": "Ags-mites/demoblaze-api-testing",
+    "rule": "tests.instructions.md",
+    "globs": [
+     "backend/tests/**/*.py",
+     "frontend/src/__tests__/**/*.{js,jsx}"
+    ]
+   },
+   {
+    "repo": "Ags-mites/demoblaze-serenity-automation",
+    "rule": "backend.instructions.md",
+    "globs": [
+     "backend/**/*.py"
+    ]
+   },
+   {
+    "repo": "Ags-mites/demoblaze-serenity-automation",
+    "rule": "frontend.instructions.md",
+    "globs": [
+     "frontend/src/**/*.{js,jsx}"
+    ]
+   }
+  ]
+ }
+}

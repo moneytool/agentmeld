@@ -1,0 +1,1689 @@
+[
+ {
+  "repo": "0x3639/go-syrius",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 9007,
+   "AGENTS.md": 8601
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.9417,
+    "jaccard": 0.9487
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "1amageek/SwiftAgent",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 25436,
+   "AGENTS.md": 25424
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.3906,
+    "jaccard": 0.9878
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "2gn/youtube-music-playlist-export",
+  "has": [
+   "AGENTS.md",
+   "copilot"
+  ],
+  "count": 2,
+  "sizes": {
+   "AGENTS.md": 177,
+   "copilot": 732
+  },
+  "pairs": {
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.0201,
+    "jaccard": 0.0645
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "69gg/Undefined",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 8087,
+   "AGENTS.md": 7502
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0138,
+    "jaccard": 0.2163
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "777pxy/auLait",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 3044,
+   "AGENTS.md": 325
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0242,
+    "jaccard": 0.1077
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "AGASocial/iablee-app",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 7018,
+   "AGENTS.md": 2450
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0194,
+    "jaccard": 0.1111
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "ActiveInferenceInstitute/GEO-INFER",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 8563,
+   "AGENTS.md": 5570
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0096,
+    "jaccard": 0.3178
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "ActiveInferenceInstitute/courses",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 3979,
+   "AGENTS.md": 5083
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0132,
+    "jaccard": 0.2062
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "AdamKrysztopa/dependence-forecastability",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md",
+   "copilot"
+  ],
+  "count": 3,
+  "sizes": {
+   "CLAUDE.md": 5533,
+   "AGENTS.md": 4166,
+   "copilot": 2629
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0193,
+    "jaccard": 0.1679
+   },
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.2982,
+    "jaccard": 0.5843
+   },
+   "CLAUDE.md|copilot": {
+    "identical": false,
+    "seq": 0.0249,
+    "jaccard": 0.1538
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "Aledon8/OpenLeukemia",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md",
+   "copilot"
+  ],
+  "count": 3,
+  "sizes": {
+   "CLAUDE.md": 2997,
+   "AGENTS.md": 5464,
+   "copilot": 1683
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.1613,
+    "jaccard": 0.3591
+   },
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.0594,
+    "jaccard": 0.2821
+   },
+   "CLAUDE.md|copilot": {
+    "identical": false,
+    "seq": 0.1316,
+    "jaccard": 0.4484
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "AzureAD/microsoft-authentication-library-common-for-objc",
+  "has": [
+   "CLAUDE.md",
+   "copilot"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 654,
+   "copilot": 3313
+  },
+  "pairs": {
+   "CLAUDE.md|copilot": {
+    "identical": false,
+    "seq": 0.0328,
+    "jaccard": 0.1933
+   }
+  },
+  "kinds": {
+   "CLAUDE.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "BlackBeltTechnology/pi-agent-dashboard",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 12,
+   "AGENTS.md": 14397
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0015,
+    "jaccard": 0.0026
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Brokezawa/nimphea",
+  "has": [
+   "AGENTS.md",
+   "copilot"
+  ],
+  "count": 2,
+  "sizes": {
+   "AGENTS.md": 8957,
+   "copilot": 6335
+  },
+  "pairs": {
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.1684,
+    "jaccard": 0.445
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "BuildHound/BuildHound",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 10261,
+   "AGENTS.md": 47
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0,
+    "jaccard": 0.0082
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Church-Plugins/cp-sync",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 2182,
+   "AGENTS.md": 1327
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0128,
+    "jaccard": 0.0779
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "CodySwannGT/lisa",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 11,
+   "AGENTS.md": 6672
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0029,
+    "jaccard": 0.0043
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Coin-Market-Man/hypertracker-skills",
+  "has": [
+   "AGENTS.md",
+   "copilot",
+   "cursorrules"
+  ],
+  "count": 3,
+  "sizes": {
+   "AGENTS.md": 44426,
+   "copilot": 35345,
+   "cursorrules": 44426
+  },
+  "pairs": {
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.2523,
+    "jaccard": 0.8462
+   },
+   "AGENTS.md|cursorrules": {
+    "identical": true,
+    "seq": 1.0,
+    "jaccard": 1.0
+   },
+   "copilot|cursorrules": {
+    "identical": false,
+    "seq": 0.8222,
+    "jaccard": 0.8462
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "copilot": "file",
+   "cursorrules": "file"
+  }
+ },
+ {
+  "repo": "DevopsArtFactory/unic",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 932,
+   "AGENTS.md": 1886
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0144,
+    "jaccard": 0.1468
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "DobroslavRadosavljevic/hsize",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 6801,
+   "AGENTS.md": 9
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0032,
+    "jaccard": 0.0051
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Druindarora/sidequestlab",
+  "has": [
+   "AGENTS.md",
+   "copilot"
+  ],
+  "count": 2,
+  "sizes": {
+   "AGENTS.md": 1872,
+   "copilot": 619
+  },
+  "pairs": {
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.0135,
+    "jaccard": 0.1659
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "EffortlessMetrics/shipper",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md",
+   "GEMINI.md",
+   "copilot"
+  ],
+  "count": 4,
+  "sizes": {
+   "CLAUDE.md": 8284,
+   "AGENTS.md": 9472,
+   "copilot": 7545,
+   "GEMINI.md": 5145
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.7787,
+    "jaccard": 0.8872
+   },
+   "AGENTS.md|GEMINI.md": {
+    "identical": false,
+    "seq": 0.0221,
+    "jaccard": 0.3247
+   },
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.0137,
+    "jaccard": 0.3266
+   },
+   "CLAUDE.md|GEMINI.md": {
+    "identical": false,
+    "seq": 0.0238,
+    "jaccard": 0.3498
+   },
+   "CLAUDE.md|copilot": {
+    "identical": false,
+    "seq": 0.0156,
+    "jaccard": 0.3359
+   },
+   "GEMINI.md|copilot": {
+    "identical": false,
+    "seq": 0.0128,
+    "jaccard": 0.3029
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file",
+   "GEMINI.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "EffortlessMetrics/shipper-swarm",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md",
+   "GEMINI.md",
+   "copilot"
+  ],
+  "count": 4,
+  "sizes": {
+   "CLAUDE.md": 9818,
+   "AGENTS.md": 12248,
+   "copilot": 7545,
+   "GEMINI.md": 5145
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.6215,
+    "jaccard": 0.8544
+   },
+   "AGENTS.md|GEMINI.md": {
+    "identical": false,
+    "seq": 0.0187,
+    "jaccard": 0.2904
+   },
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.0118,
+    "jaccard": 0.2954
+   },
+   "CLAUDE.md|GEMINI.md": {
+    "identical": false,
+    "seq": 0.0212,
+    "jaccard": 0.3225
+   },
+   "CLAUDE.md|copilot": {
+    "identical": false,
+    "seq": 0.0145,
+    "jaccard": 0.3171
+   },
+   "GEMINI.md|copilot": {
+    "identical": false,
+    "seq": 0.0128,
+    "jaccard": 0.3029
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file",
+   "GEMINI.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "EricDenis01/ericdenis",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 22608,
+   "AGENTS.md": 5568
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0086,
+    "jaccard": 0.1278
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "FalconChristmas/fpp",
+  "has": [
+   "CLAUDE.md",
+   "copilot"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 6416,
+   "copilot": 4799
+  },
+  "pairs": {
+   "CLAUDE.md|copilot": {
+    "identical": false,
+    "seq": 0.6759,
+    "jaccard": 0.7267
+   }
+  },
+  "kinds": {
+   "CLAUDE.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "Frankanator8/chesspoint72",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 660,
+   "AGENTS.md": 3527
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0153,
+    "jaccard": 0.1309
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "FranklinIV94/franklin-portfolio",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 2936,
+   "AGENTS.md": 2936
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": true,
+    "seq": 1.0,
+    "jaccard": 1.0
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "FurBlood344324/free-claude-code",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 8390,
+   "AGENTS.md": 8390
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": true,
+    "seq": 1.0,
+    "jaccard": 1.0
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "GRID-check/grid-oib-agent",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 1004,
+   "AGENTS.md": 10847
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0048,
+    "jaccard": 0.1084
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Gustpbbr/Teste-ChatGPT",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 2815,
+   "AGENTS.md": 1992
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0284,
+    "jaccard": 0.2099
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "HareeshBahuleyan/competitor-scout",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 11,
+   "AGENTS.md": 5717
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0041,
+    "jaccard": 0.0057
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "HorusGoul/eslint-plugin-react-render-types",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 9,
+   "AGENTS.md": 5205
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0063,
+    "jaccard": 0.0039
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "HotcakesCommerce/hotcakes-commerce-core",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md",
+   "copilot"
+  ],
+  "count": 3,
+  "sizes": {
+   "CLAUDE.md": 1636,
+   "AGENTS.md": 27373,
+   "copilot": 4628
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0132,
+    "jaccard": 0.1348
+   },
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.0113,
+    "jaccard": 0.2532
+   },
+   "CLAUDE.md|copilot": {
+    "identical": false,
+    "seq": 0.0971,
+    "jaccard": 0.3556
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "ISG-kris79/TradingBot",
+  "has": [
+   "CLAUDE.md",
+   "copilot"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 10665,
+   "copilot": 3279
+  },
+  "pairs": {
+   "CLAUDE.md|copilot": {
+    "identical": false,
+    "seq": 0.0033,
+    "jaccard": 0.0473
+   }
+  },
+  "kinds": {
+   "CLAUDE.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "IShinji/Nerv",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md",
+   "cursorrules"
+  ],
+  "count": 3,
+  "sizes": {
+   "CLAUDE.md": 2483,
+   "AGENTS.md": 1301,
+   "cursorrules": 620
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0112,
+    "jaccard": 0.3436
+   },
+   "AGENTS.md|cursorrules": {
+    "identical": false,
+    "seq": 0.0094,
+    "jaccard": 0.4748
+   },
+   "CLAUDE.md|cursorrules": {
+    "identical": false,
+    "seq": 0.01,
+    "jaccard": 0.2629
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file",
+   "cursorrules": "file"
+  }
+ },
+ {
+  "repo": "JHamidun/claude-code-config-pack",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 7096,
+   "AGENTS.md": 4250
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0225,
+    "jaccard": 0.1106
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Jahia/tomcat-log-provider",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 66,
+   "AGENTS.md": 4602
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0268,
+    "jaccard": 0.0139
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "JakeRyu/retro-board",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md",
+   "copilot"
+  ],
+  "count": 3,
+  "sizes": {
+   "CLAUDE.md": 11,
+   "AGENTS.md": 325,
+   "copilot": 5579
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.053,
+    "jaccard": 0.0
+   },
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.022,
+    "jaccard": 0.0735
+   },
+   "CLAUDE.md|copilot": {
+    "identical": false,
+    "seq": 0.0,
+    "jaccard": 0.0046
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "JatinNirwann/seahive",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 6570,
+   "AGENTS.md": 674
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.011,
+    "jaccard": 0.0709
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "JayCanuck/webrtc-ws-server",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md",
+   "GEMINI.md"
+  ],
+  "count": 3,
+  "sizes": {
+   "CLAUDE.md": 9,
+   "AGENTS.md": 4347,
+   "GEMINI.md": 9
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0065,
+    "jaccard": 0.0081
+   },
+   "AGENTS.md|GEMINI.md": {
+    "identical": false,
+    "seq": 0.0065,
+    "jaccard": 0.0081
+   },
+   "CLAUDE.md|GEMINI.md": {
+    "identical": true,
+    "seq": 1.0,
+    "jaccard": 1.0
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file",
+   "GEMINI.md": "file"
+  }
+ },
+ {
+  "repo": "JeremyVyska/bc-code-intelligence",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 3627,
+   "AGENTS.md": 8755
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0168,
+    "jaccard": 0.2117
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "JesusMaVe/ws-noti",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 4019,
+   "AGENTS.md": 8369
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0679,
+    "jaccard": 0.2729
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Kamil74/inwoxi",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 11,
+   "AGENTS.md": 325
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.053,
+    "jaccard": 0.0
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Katsiarynakavaleuskaya/PulsePlate",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md",
+   "cursorrules"
+  ],
+  "count": 3,
+  "sizes": {
+   "CLAUDE.md": 683,
+   "AGENTS.md": 166796,
+   "cursorrules": 1286
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0003,
+    "jaccard": 0.019
+   },
+   "AGENTS.md|cursorrules": {
+    "identical": false,
+    "seq": 0.0006,
+    "jaccard": 0.0323
+   },
+   "CLAUDE.md|cursorrules": {
+    "identical": false,
+    "seq": 0.0226,
+    "jaccard": 0.0491
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file",
+   "cursorrules": "file"
+  }
+ },
+ {
+  "repo": "Khamel83/argus",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 1256,
+   "AGENTS.md": 12531
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0081,
+    "jaccard": 0.1407
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "LambdaSection/Metatron",
+  "has": [
+   "AGENTS.md",
+   "cursorrules"
+  ],
+  "count": 2,
+  "sizes": {
+   "AGENTS.md": 39972,
+   "cursorrules": 30050
+  },
+  "pairs": {
+   "AGENTS.md|cursorrules": {
+    "identical": false,
+    "seq": 0.1122,
+    "jaccard": 0.5982
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "cursorrules": "file"
+  }
+ },
+ {
+  "repo": "LeadMagic/gtm-skills",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 45755,
+   "AGENTS.md": 2013
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0099,
+    "jaccard": 0.0564
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "LindaHaviv/oracle-second-brain",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 228,
+   "AGENTS.md": 6951
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.011,
+    "jaccard": 0.0547
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "LindaHaviv/second-brain",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 228,
+   "AGENTS.md": 6951
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.011,
+    "jaccard": 0.0547
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Mughal-Hash-24/Wisdom",
+  "has": [
+   "AGENTS.md",
+   "GEMINI.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "AGENTS.md": 853,
+   "GEMINI.md": 13533
+  },
+  "pairs": {
+   "AGENTS.md|GEMINI.md": {
+    "identical": false,
+    "seq": 0.0057,
+    "jaccard": 0.0406
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "GEMINI.md": "file"
+  }
+ },
+ {
+  "repo": "NanoNative/nano",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 4589,
+   "AGENTS.md": 2925
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0236,
+    "jaccard": 0.2471
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "NguyenDung278/E-CommerceMicroservicesPlatform",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 7969,
+   "AGENTS.md": 21983
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.006,
+    "jaccard": 0.3734
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "NickCrew/Claude-Cortex",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 9,
+   "AGENTS.md": 6913
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0052,
+    "jaccard": 0.0067
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "NomaDamas/katok",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 9,
+   "AGENTS.md": 3810
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0051,
+    "jaccard": 0.0
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Open-Document-Alliance/Agent-Review-CLI",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 89,
+   "AGENTS.md": 14455
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0091,
+    "jaccard": 0.0162
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "PIsberg/vibetags",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md",
+   "GEMINI.md"
+  ],
+  "count": 3,
+  "sizes": {
+   "CLAUDE.md": 13294,
+   "AGENTS.md": 12456,
+   "GEMINI.md": 5696
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0924,
+    "jaccard": 0.365
+   },
+   "AGENTS.md|GEMINI.md": {
+    "identical": false,
+    "seq": 0.1406,
+    "jaccard": 0.3489
+   },
+   "CLAUDE.md|GEMINI.md": {
+    "identical": false,
+    "seq": 0.129,
+    "jaccard": 0.4402
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file",
+   "GEMINI.md": "file"
+  }
+ },
+ {
+  "repo": "PePoDev/PePoDev",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 114,
+   "AGENTS.md": 114
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": true,
+    "seq": 1.0,
+    "jaccard": 1.0
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Protelis/Protelis",
+  "has": [
+   "AGENTS.md",
+   "copilot"
+  ],
+  "count": 2,
+  "sizes": {
+   "AGENTS.md": 2102,
+   "copilot": 6182
+  },
+  "pairs": {
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.018,
+    "jaccard": 0.3169
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "PyAutoLabs/PyAutoNerves",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md",
+   "copilot"
+  ],
+  "count": 3,
+  "sizes": {
+   "CLAUDE.md": 256,
+   "AGENTS.md": 6810,
+   "copilot": 466
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0113,
+    "jaccard": 0.0608
+   },
+   "AGENTS.md|copilot": {
+    "identical": false,
+    "seq": 0.0103,
+    "jaccard": 0.1051
+   },
+   "CLAUDE.md|copilot": {
+    "identical": false,
+    "seq": 0.1139,
+    "jaccard": 0.2879
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file",
+   "copilot": "file"
+  }
+ },
+ {
+  "repo": "RasaHQ/studio-docs",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 7868,
+   "AGENTS.md": 1300
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0225,
+    "jaccard": 0.1111
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Resynance/mini-revvy",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 11,
+   "AGENTS.md": 1943
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0121,
+    "jaccard": 0.0139
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "Rfarasati/LLM-HRS-Project",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 5231,
+   "AGENTS.md": 26610
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0371,
+    "jaccard": 0.1942
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "RobertoMachorro/Moped",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 44,
+   "AGENTS.md": 1289
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.0563,
+    "jaccard": 0.036
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "SSSYoung/vibe-coding-mobile-engineering",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 2381,
+   "AGENTS.md": 2374
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.97,
+    "jaccard": 0.9538
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "SitaaronKL/Superset",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 483,
+   "AGENTS.md": 2237
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.358,
+    "jaccard": 0.2589
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ },
+ {
+  "repo": "SmallFan1017/multi-agent",
+  "has": [
+   "AGENTS.md",
+   "CLAUDE.md"
+  ],
+  "count": 2,
+  "sizes": {
+   "CLAUDE.md": 4231,
+   "AGENTS.md": 4285
+  },
+  "pairs": {
+   "AGENTS.md|CLAUDE.md": {
+    "identical": false,
+    "seq": 0.5325,
+    "jaccard": 0.8333
+   }
+  },
+  "kinds": {
+   "AGENTS.md": "file",
+   "CLAUDE.md": "file"
+  }
+ }
+]

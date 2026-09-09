@@ -1,0 +1,991 @@
+{
+ "repos": [
+  {
+   "repo": "0nuc/meal-finder",
+   "n_rules": 3,
+   "total_chars": 1263,
+   "median_ratio": 0.0,
+   "n_files": 13
+  },
+  {
+   "repo": "1127152834/data-analysis",
+   "n_rules": 23,
+   "total_chars": 85509,
+   "median_ratio": 0.0,
+   "n_files": 869
+  },
+  {
+   "repo": "112KA/x-repository-template",
+   "n_rules": 2,
+   "total_chars": 1222,
+   "median_ratio": 0.0,
+   "n_files": 152
+  },
+  {
+   "repo": "123hassani-ai/Data-Save",
+   "n_rules": 2,
+   "total_chars": 6843,
+   "median_ratio": 1.0,
+   "n_files": 24
+  },
+  {
+   "repo": "200okmk/full-tanstack-starter",
+   "n_rules": 4,
+   "total_chars": 32125,
+   "median_ratio": 0.07237354085603113,
+   "n_files": 34
+  },
+  {
+   "repo": "520Girl/work_chandao_server",
+   "n_rules": 11,
+   "total_chars": 58247,
+   "median_ratio": 0.0,
+   "n_files": 285
+  },
+  {
+   "repo": "AIDDbot/ArchetypeAngularSPA",
+   "n_rules": 14,
+   "total_chars": 46910,
+   "median_ratio": 0.0,
+   "n_files": 42
+  },
+  {
+   "repo": "ARCHITECTURA-AI/AIdeator",
+   "n_rules": 5,
+   "total_chars": 4164,
+   "median_ratio": 1.0,
+   "n_files": 175
+  },
+  {
+   "repo": "Abdi1717/huzzology",
+   "n_rules": 23,
+   "total_chars": 136340,
+   "median_ratio": 0.9792283995892621,
+   "n_files": 162
+  },
+  {
+   "repo": "Adit-Jain-srm/NightmareNet",
+   "n_rules": 9,
+   "total_chars": 16473,
+   "median_ratio": 0.6892490742427002,
+   "n_files": 445
+  },
+  {
+   "repo": "Adit-Jain-srm/Razorpay-AI-Builder",
+   "n_rules": 10,
+   "total_chars": 20475,
+   "median_ratio": 0.74998778998779,
+   "n_files": 385
+  },
+  {
+   "repo": "AeyeOps/qdrant-loader",
+   "n_rules": 10,
+   "total_chars": 14674,
+   "median_ratio": 0.012539184952978056,
+   "n_files": 379
+  },
+  {
+   "repo": "Ags-mites/demoblaze-api-testing",
+   "n_rules": 4,
+   "total_chars": 10493,
+   "median_ratio": 0.24178023444200897,
+   "n_files": 12
+  },
+  {
+   "repo": "Ags-mites/demoblaze-serenity-automation",
+   "n_rules": 4,
+   "total_chars": 10493,
+   "median_ratio": 0.24178023444200897,
+   "n_files": 28
+  },
+  {
+   "repo": "Ags-mites/test-k6",
+   "n_rules": 4,
+   "total_chars": 10493,
+   "median_ratio": 0.24178023444200897,
+   "n_files": 10
+  },
+  {
+   "repo": "Ags-mites/test-karate",
+   "n_rules": 4,
+   "total_chars": 10493,
+   "median_ratio": 0.24178023444200897,
+   "n_files": 12
+  },
+  {
+   "repo": "Aledon8/OpenLeukemia",
+   "n_rules": 13,
+   "total_chars": 7019,
+   "median_ratio": 0.3114403761219547,
+   "n_files": 26
+  },
+  {
+   "repo": "Allexndr/barsik_game",
+   "n_rules": 2,
+   "total_chars": 1312,
+   "median_ratio": 0.36814024390243905,
+   "n_files": 156
+  },
+  {
+   "repo": "AndresCharpentie/Desaf-o-men-1",
+   "n_rules": 6,
+   "total_chars": 7274,
+   "median_ratio": 0.27811383007973606,
+   "n_files": 9
+  },
+  {
+   "repo": "AndresCharpentie/GameOfLife",
+   "n_rules": 6,
+   "total_chars": 7274,
+   "median_ratio": 0.27811383007973606,
+   "n_files": 5
+  },
+  {
+   "repo": "AndryOre/marksy",
+   "n_rules": 15,
+   "total_chars": 17736,
+   "median_ratio": 0.32735678845286426,
+   "n_files": 39
+  },
+  {
+   "repo": "AnthonyAltieri/alt-stack",
+   "n_rules": 3,
+   "total_chars": 523,
+   "median_ratio": 0.49521988527724664,
+   "n_files": 351
+  },
+  {
+   "repo": "AobaIwaki123/sakamichi-penlight-quiz",
+   "n_rules": 10,
+   "total_chars": 73071,
+   "median_ratio": 0.5437724952443513,
+   "n_files": 74
+  },
+  {
+   "repo": "AutolenisWebDeveloper/Emergent_Autolenis",
+   "n_rules": 9,
+   "total_chars": 17165,
+   "median_ratio": 0.0,
+   "n_files": 3621
+  },
+  {
+   "repo": "Azure/azure-sdk-for-go",
+   "n_rules": 6,
+   "total_chars": 6364,
+   "median_ratio": 0.532683846637335,
+   "n_files": 16232
+  },
+  {
+   "repo": "Azure/m",
+   "n_rules": 3,
+   "total_chars": 10076,
+   "median_ratio": 0.13566891623660182,
+   "n_files": 420
+  },
+  {
+   "repo": "BachEndDeveloper/BESTSELLER-AI-Hackaton-25",
+   "n_rules": 3,
+   "total_chars": 48167,
+   "median_ratio": 0.0,
+   "n_files": 87
+  },
+  {
+   "repo": "BehindTheMusicTree/the-music-tree-frontend",
+   "n_rules": 7,
+   "total_chars": 7283,
+   "median_ratio": 0.5963201977207195,
+   "n_files": 87
+  },
+  {
+   "repo": "Bencev04/andrew-microserivce",
+   "n_rules": 3,
+   "total_chars": 8352,
+   "median_ratio": 0.4443247126436782,
+   "n_files": 60
+  },
+  {
+   "repo": "Bralabee/JToye_OaaS_2026",
+   "n_rules": 14,
+   "total_chars": 48913,
+   "median_ratio": 0.12546766708237073,
+   "n_files": 1179
+  },
+  {
+   "repo": "Building-With-Agents/watechcoalition",
+   "n_rules": 15,
+   "total_chars": 74989,
+   "median_ratio": 0.2901092160183494,
+   "n_files": 869
+  },
+  {
+   "repo": "CCRami/bellerepousse-ui",
+   "n_rules": 44,
+   "total_chars": 464186,
+   "median_ratio": 0.26863800286953937,
+   "n_files": 90
+  },
+  {
+   "repo": "CallMeGreg/gh-language",
+   "n_rules": 2,
+   "total_chars": 9612,
+   "median_ratio": 1.0,
+   "n_files": 6
+  },
+  {
+   "repo": "Cheolsker/2025_Studies",
+   "n_rules": 2,
+   "total_chars": 3826,
+   "median_ratio": 0.02953476215368531,
+   "n_files": 38
+  },
+  {
+   "repo": "Chia-Network/cadt",
+   "n_rules": 3,
+   "total_chars": 6007,
+   "median_ratio": 0.33261195272182453,
+   "n_files": 669
+  },
+  {
+   "repo": "CiscoDevNet/essentials",
+   "n_rules": 7,
+   "total_chars": 12332,
+   "median_ratio": 0.8113039247486215,
+   "n_files": 232
+  },
+  {
+   "repo": "ClaudioASantana/sprinthub",
+   "n_rules": 3,
+   "total_chars": 2930,
+   "median_ratio": 0.5440273037542662,
+   "n_files": 631
+  },
+  {
+   "repo": "Coalition-of-Freeware-Developers/Scenery-Editor-X",
+   "n_rules": 23,
+   "total_chars": 414765,
+   "median_ratio": 0.0,
+   "n_files": 214
+  },
+  {
+   "repo": "CodeAny-inc/Clavyn",
+   "n_rules": 2,
+   "total_chars": 2334,
+   "median_ratio": 1.0,
+   "n_files": 79
+  },
+  {
+   "repo": "CodeCraftsman-Jr/Simulink-integration",
+   "n_rules": 14,
+   "total_chars": 102226,
+   "median_ratio": 0.0,
+   "n_files": 128
+  },
+  {
+   "repo": "CountJung/react-tauri-video-editor",
+   "n_rules": 5,
+   "total_chars": 8044,
+   "median_ratio": 0.2129537543510691,
+   "n_files": 61
+  },
+  {
+   "repo": "DEEDAVISINC/NEXUS",
+   "n_rules": 50,
+   "total_chars": 275123,
+   "median_ratio": 0.466042461008349,
+   "n_files": 577
+  },
+  {
+   "repo": "DHKIM0207/gemini-translator-summarizer",
+   "n_rules": 6,
+   "total_chars": 6323,
+   "median_ratio": 1.0,
+   "n_files": 13
+  },
+  {
+   "repo": "DIGITAL-LOAN-PLATFORM/Digital-Loan",
+   "n_rules": 3,
+   "total_chars": 14652,
+   "median_ratio": 0.49167349167349167,
+   "n_files": 122
+  },
+  {
+   "repo": "DIGITAL-LOAN-PLATFORM/Loan-Platform",
+   "n_rules": 3,
+   "total_chars": 14652,
+   "median_ratio": 0.49167349167349167,
+   "n_files": 117
+  },
+  {
+   "repo": "DVVID-G/MercApp-Backend",
+   "n_rules": 3,
+   "total_chars": 7196,
+   "median_ratio": 1.0,
+   "n_files": 73
+  },
+  {
+   "repo": "Davisermenho/Hb_Track",
+   "n_rules": 11,
+   "total_chars": 46800,
+   "median_ratio": 0.30846153846153845,
+   "n_files": 1299
+  },
+  {
+   "repo": "Deejpotter/online-emu",
+   "n_rules": 4,
+   "total_chars": 7950,
+   "median_ratio": 0.17836477987421384,
+   "n_files": 61
+  },
+  {
+   "repo": "DemocraciaEnRed/pba-ministerio-abierto",
+   "n_rules": 4,
+   "total_chars": 12987,
+   "median_ratio": 0.44275044275044273,
+   "n_files": 306
+  },
+  {
+   "repo": "Dev-Devarsh/BE-node-microservice-boilerplate",
+   "n_rules": 7,
+   "total_chars": 15028,
+   "median_ratio": 0.5836438647857333,
+   "n_files": 58
+  },
+  {
+   "repo": "Diwamoto/microservice_template",
+   "n_rules": 5,
+   "total_chars": 25298,
+   "median_ratio": 0.8035022531425409,
+   "n_files": 12
+  },
+  {
+   "repo": "DrawnCentipede2/aquaman",
+   "n_rules": 6,
+   "total_chars": 5363,
+   "median_ratio": 0.36639940331903786,
+   "n_files": 154
+  },
+  {
+   "repo": "Dvir-Ratzon/keyflow-connect-spaces",
+   "n_rules": 3,
+   "total_chars": 9593,
+   "median_ratio": 1.0,
+   "n_files": 338
+  },
+  {
+   "repo": "ELkhomssi/cryptocheck-ai-v3",
+   "n_rules": 4,
+   "total_chars": 14432,
+   "median_ratio": 0.874099223946785,
+   "n_files": 1478
+  },
+  {
+   "repo": "EasonChen11/esp32-iot-weight-scale",
+   "n_rules": 6,
+   "total_chars": 76012,
+   "median_ratio": 0.0,
+   "n_files": 19
+  },
+  {
+   "repo": "EliasRanz/ai-development-suite",
+   "n_rules": 11,
+   "total_chars": 64543,
+   "median_ratio": 0.0,
+   "n_files": 82
+  },
+  {
+   "repo": "ElsiKora/Commitizen-Plugin-Commitlint-AI",
+   "n_rules": 5,
+   "total_chars": 5799,
+   "median_ratio": 1.0,
+   "n_files": 96
+  },
+  {
+   "repo": "Erudition/marvin-mcp",
+   "n_rules": 2,
+   "total_chars": 8887,
+   "median_ratio": 0.8992910993586137,
+   "n_files": 141
+  },
+  {
+   "repo": "EthicalML/ethical",
+   "n_rules": 3,
+   "total_chars": 18939,
+   "median_ratio": 0.0,
+   "n_files": 44
+  },
+  {
+   "repo": "EugenMoser/Portfolio",
+   "n_rules": 3,
+   "total_chars": 6592,
+   "median_ratio": 0.0,
+   "n_files": 33
+  },
+  {
+   "repo": "FaithForge/faith-forge-web",
+   "n_rules": 3,
+   "total_chars": 4674,
+   "median_ratio": 0.21437740693196405,
+   "n_files": 182
+  },
+  {
+   "repo": "Fidasek009/listen-along",
+   "n_rules": 7,
+   "total_chars": 31775,
+   "median_ratio": 0.3358300550747443,
+   "n_files": 13
+  },
+  {
+   "repo": "FlexMeasures/flexmeasures",
+   "n_rules": 11,
+   "total_chars": 24853,
+   "median_ratio": 0.5638755884601456,
+   "n_files": 499
+  },
+  {
+   "repo": "FutureExcited/vibe-rules",
+   "n_rules": 4,
+   "total_chars": 1221,
+   "median_ratio": 0.8198198198198198,
+   "n_files": 50
+  },
+  {
+   "repo": "GalushkoArt/openapi-testgen-monorepo",
+   "n_rules": 2,
+   "total_chars": 6784,
+   "median_ratio": 1.0,
+   "n_files": 308
+  },
+  {
+   "repo": "Gilqamesh/Builder",
+   "n_rules": 3,
+   "total_chars": 18253,
+   "median_ratio": 0.6442776529885498,
+   "n_files": 98
+  },
+  {
+   "repo": "Gurgenbaba/genesis-colonies",
+   "n_rules": 5,
+   "total_chars": 13274,
+   "median_ratio": 0.8486514991713123,
+   "n_files": 846
+  },
+  {
+   "repo": "Hakzai/RestorFX",
+   "n_rules": 16,
+   "total_chars": 51081,
+   "median_ratio": 0.4831346293142264,
+   "n_files": 41
+  },
+  {
+   "repo": "HaymayndzUltra/AdvancedRules",
+   "n_rules": 21,
+   "total_chars": 69705,
+   "median_ratio": 0.07155871171365039,
+   "n_files": 104
+  },
+  {
+   "repo": "Himavanta/warwave",
+   "n_rules": 50,
+   "total_chars": 315157,
+   "median_ratio": 0.0,
+   "n_files": 194
+  },
+  {
+   "repo": "HongXunyang/rixs_pre_toolbox",
+   "n_rules": 4,
+   "total_chars": 36211,
+   "median_ratio": 0.08977934881665792,
+   "n_files": 58
+  },
+  {
+   "repo": "Hot-Sweeper/phonk-leaderboard",
+   "n_rules": 2,
+   "total_chars": 222,
+   "median_ratio": 0.0,
+   "n_files": 88
+  },
+  {
+   "repo": "ITU-ScrollBar/ScrollBarWebsite",
+   "n_rules": 3,
+   "total_chars": 6091,
+   "median_ratio": 0.5531111475948121,
+   "n_files": 142
+  },
+  {
+   "repo": "InterCooperative-Network/icn",
+   "n_rules": 5,
+   "total_chars": 28892,
+   "median_ratio": 0.0,
+   "n_files": 1368
+  },
+  {
+   "repo": "ItsChrisOfficial/perchance-bot-workshop",
+   "n_rules": 4,
+   "total_chars": 8438,
+   "median_ratio": 0.0,
+   "n_files": 42
+  },
+  {
+   "repo": "IvanTran-2001/FriendChise",
+   "n_rules": 5,
+   "total_chars": 12477,
+   "median_ratio": 0.0,
+   "n_files": 728
+  },
+  {
+   "repo": "J-A-A-M/jaam_ha",
+   "n_rules": 16,
+   "total_chars": 70609,
+   "median_ratio": 0.19032984463736918,
+   "n_files": 55
+  },
+  {
+   "repo": "JSdotNet/Lets-BBQ",
+   "n_rules": 4,
+   "total_chars": 7925,
+   "median_ratio": 0.15558359621451104,
+   "n_files": 20
+  },
+  {
+   "repo": "Jack41784090/condor-v1",
+   "n_rules": 3,
+   "total_chars": 16265,
+   "median_ratio": 0.0,
+   "n_files": 37
+  },
+  {
+   "repo": "Jailtonmendes24/copilot-code-review-v2",
+   "n_rules": 2,
+   "total_chars": 7136,
+   "median_ratio": 0.5175168161434978,
+   "n_files": 15
+  },
+  {
+   "repo": "James-CodeX/Smart-Beekeeping-main",
+   "n_rules": 4,
+   "total_chars": 613,
+   "median_ratio": 1.0,
+   "n_files": 24
+  },
+  {
+   "repo": "JamesonRGrieve/ServerFramework",
+   "n_rules": 5,
+   "total_chars": 1250,
+   "median_ratio": 0.0,
+   "n_files": 533
+  },
+  {
+   "repo": "Javier-Godon/dlq-streaming",
+   "n_rules": 9,
+   "total_chars": 25235,
+   "median_ratio": 0.22357836338418863,
+   "n_files": 83
+  },
+  {
+   "repo": "JeffreyZhu0201/MeridianERP",
+   "n_rules": 8,
+   "total_chars": 20196,
+   "median_ratio": 0.6533967122202416,
+   "n_files": 777
+  },
+  {
+   "repo": "John-Jepsen/labs",
+   "n_rules": 12,
+   "total_chars": 26052,
+   "median_ratio": 0.6865883617380624,
+   "n_files": 37
+  },
+  {
+   "repo": "JornSBrem/MenuFit",
+   "n_rules": 5,
+   "total_chars": 5347,
+   "median_ratio": 0.4256592481765476,
+   "n_files": 224
+  },
+  {
+   "repo": "JunaYa/giraffe-ai",
+   "n_rules": 7,
+   "total_chars": 14364,
+   "median_ratio": 0.21526037315510999,
+   "n_files": 27
+  },
+  {
+   "repo": "Jurph/untext",
+   "n_rules": 5,
+   "total_chars": 10653,
+   "median_ratio": 1.0,
+   "n_files": 81
+  },
+  {
+   "repo": "K-Mistele/opensearch",
+   "n_rules": 4,
+   "total_chars": 27844,
+   "median_ratio": 0.7116793564143082,
+   "n_files": 35
+  },
+  {
+   "repo": "KAMAL20201/SneakerMarketplace",
+   "n_rules": 11,
+   "total_chars": 20478,
+   "median_ratio": 0.008155093270827229,
+   "n_files": 194
+  },
+  {
+   "repo": "KMiseckas/kmCommands",
+   "n_rules": 4,
+   "total_chars": 28303,
+   "median_ratio": 0.92707486838851,
+   "n_files": 56
+  },
+  {
+   "repo": "KarolLeb/rpg-manager",
+   "n_rules": 5,
+   "total_chars": 33014,
+   "median_ratio": 0.374356333676622,
+   "n_files": 252
+  },
+  {
+   "repo": "KazeONGUENE/rope",
+   "n_rules": 7,
+   "total_chars": 53101,
+   "median_ratio": 0.20912977156739043,
+   "n_files": 218
+  },
+  {
+   "repo": "Kele-Bingtang/teek-design-vue3",
+   "n_rules": 3,
+   "total_chars": 5478,
+   "median_ratio": 0.7732749178532311,
+   "n_files": 398
+  },
+  {
+   "repo": "KiwiHacksNZ/podium",
+   "n_rules": 3,
+   "total_chars": 64980,
+   "median_ratio": 0.10630963373345645,
+   "n_files": 105
+  },
+  {
+   "repo": "Klaudiusz321/social-media-agents",
+   "n_rules": 7,
+   "total_chars": 37003,
+   "median_ratio": 1.0,
+   "n_files": 31
+  },
+  {
+   "repo": "KvCG/sc2crpage",
+   "n_rules": 5,
+   "total_chars": 19149,
+   "median_ratio": 0.11692516580500287,
+   "n_files": 211
+  },
+  {
+   "repo": "KyleZhang07/wishiyo",
+   "n_rules": 3,
+   "total_chars": 14559,
+   "median_ratio": 0.0,
+   "n_files": 156
+  },
+  {
+   "repo": "KylerZan23/fitness-trackerV2",
+   "n_rules": 7,
+   "total_chars": 15435,
+   "median_ratio": 0.4615484288953677,
+   "n_files": 322
+  },
+  {
+   "repo": "Laisky/laisky-blog",
+   "n_rules": 2,
+   "total_chars": 3900,
+   "median_ratio": 1.0,
+   "n_files": 35
+  },
+  {
+   "repo": "LaughlinJames/NextJS-Starter-Project",
+   "n_rules": 5,
+   "total_chars": 29575,
+   "median_ratio": 1.0,
+   "n_files": 12
+  },
+  {
+   "repo": "Lawofall/AgentCore",
+   "n_rules": 21,
+   "total_chars": 35549,
+   "median_ratio": 0.2335649385355425,
+   "n_files": 5462
+  },
+  {
+   "repo": "LebedevIV/agent_plugins_platform",
+   "n_rules": 7,
+   "total_chars": 28836,
+   "median_ratio": 0.329137189624081,
+   "n_files": 224
+  },
+  {
+   "repo": "LittleDan9/markdown-manager",
+   "n_rules": 27,
+   "total_chars": 166977,
+   "median_ratio": 0.09173718536085808,
+   "n_files": 909
+  },
+  {
+   "repo": "LittleFogCat/XiaoniuTech",
+   "n_rules": 4,
+   "total_chars": 5619,
+   "median_ratio": 0.0,
+   "n_files": 110
+  },
+  {
+   "repo": "LiuChang-ao/XI-Resource-Server",
+   "n_rules": 4,
+   "total_chars": 6597,
+   "median_ratio": 1.0,
+   "n_files": 27
+  },
+  {
+   "repo": "LiveHelperChat/livehelperchat",
+   "n_rules": 4,
+   "total_chars": 49568,
+   "median_ratio": 0.0,
+   "n_files": 4936
+  },
+  {
+   "repo": "LucasQuirino007/agent-mode-v2_2",
+   "n_rules": 2,
+   "total_chars": 7136,
+   "median_ratio": 0.5175168161434978,
+   "n_files": 15
+  },
+  {
+   "repo": "LynnCen/gitlab-mcp",
+   "n_rules": 3,
+   "total_chars": 12978,
+   "median_ratio": 0.0,
+   "n_files": 110
+  },
+  {
+   "repo": "MCLifeLeader/System-Uptime-Tracker",
+   "n_rules": 47,
+   "total_chars": 500484,
+   "median_ratio": 0.27080386186171784,
+   "n_files": 389
+  },
+  {
+   "repo": "MRoie/lego-loco-cluster",
+   "n_rules": 7,
+   "total_chars": 11014,
+   "median_ratio": 0.12275285999636826,
+   "n_files": 191
+  },
+  {
+   "repo": "MaRT1n1q/fullstack-fastapi-nextjs-template",
+   "n_rules": 4,
+   "total_chars": 10568,
+   "median_ratio": 0.8240915972747919,
+   "n_files": 34
+  },
+  {
+   "repo": "MaRekGroup/agentic-alz-accelerator",
+   "n_rules": 9,
+   "total_chars": 22707,
+   "median_ratio": 0.4369137270445237,
+   "n_files": 122
+  },
+  {
+   "repo": "Macavity/mapeditor",
+   "n_rules": 4,
+   "total_chars": 10041,
+   "median_ratio": 0.2908076884772433,
+   "n_files": 206
+  },
+  {
+   "repo": "MadaBurns/bv-mcp",
+   "n_rules": 5,
+   "total_chars": 15802,
+   "median_ratio": 0.0,
+   "n_files": 1196
+  },
+  {
+   "repo": "Madreag/Vampire-Survivor-Clone",
+   "n_rules": 5,
+   "total_chars": 2115,
+   "median_ratio": 0.8387706855791962,
+   "n_files": 15
+  },
+  {
+   "repo": "Mahmoud-Ramadan2/demo-portal",
+   "n_rules": 5,
+   "total_chars": 17909,
+   "median_ratio": 0.4685353732760065,
+   "n_files": 94
+  },
+  {
+   "repo": "Maijied/Loragent",
+   "n_rules": 50,
+   "total_chars": 234889,
+   "median_ratio": 0.007386467650677554,
+   "n_files": 2392
+  },
+  {
+   "repo": "MarimerLLC/calendar-mcp",
+   "n_rules": 7,
+   "total_chars": 41131,
+   "median_ratio": 0.0,
+   "n_files": 177
+  },
+  {
+   "repo": "MattBerg11/sleeper-league-explorer",
+   "n_rules": 4,
+   "total_chars": 6058,
+   "median_ratio": 0.7733575437438098,
+   "n_files": 46
+  },
+  {
+   "repo": "MattCorlleone/agent-instructions",
+   "n_rules": 23,
+   "total_chars": 29440,
+   "median_ratio": 0.15101902173913043,
+   "n_files": 8
+  },
+  {
+   "repo": "MatteoCianelli/PII_Game_Of_Life",
+   "n_rules": 6,
+   "total_chars": 7274,
+   "median_ratio": 0.27811383007973606,
+   "n_files": 5
+  },
+  {
+   "repo": "MaxFroehlich1410/yaqs-julia",
+   "n_rules": 2,
+   "total_chars": 11697,
+   "median_ratio": 0.6779516115243225,
+   "n_files": 72
+  },
+  {
+   "repo": "Meltemi-Q/WechatArticleEditTool",
+   "n_rules": 5,
+   "total_chars": 5617,
+   "median_ratio": 0.2773722627737226,
+   "n_files": 21
+  },
+  {
+   "repo": "MetaMask/metamask-design-system",
+   "n_rules": 11,
+   "total_chars": 121137,
+   "median_ratio": 0.04328157375533487,
+   "n_files": 1280
+  },
+  {
+   "repo": "MiloAgudelo/jamcam-astro",
+   "n_rules": 6,
+   "total_chars": 17973,
+   "median_ratio": 0.10449006843598732,
+   "n_files": 13
+  },
+  {
+   "repo": "Mittenzx/Adastrea",
+   "n_rules": 7,
+   "total_chars": 93317,
+   "median_ratio": 0.0,
+   "n_files": 351
+  },
+  {
+   "repo": "MyTeamForDev/CloudZen",
+   "n_rules": 2,
+   "total_chars": 4300,
+   "median_ratio": 0.0,
+   "n_files": 97
+  },
+  {
+   "repo": "NVIDIA-NeMo/nemo-platform",
+   "n_rules": 4,
+   "total_chars": 13918,
+   "median_ratio": 0.26677683575226324,
+   "n_files": 6875
+  },
+  {
+   "repo": "NXY666/common-map",
+   "n_rules": 2,
+   "total_chars": 1133,
+   "median_ratio": 1.0,
+   "n_files": 43
+  },
+  {
+   "repo": "Namalabs/memoli-web",
+   "n_rules": 8,
+   "total_chars": 42105,
+   "median_ratio": 0.18731742073387958,
+   "n_files": 50
+  },
+  {
+   "repo": "NiaExperience/PearlOS",
+   "n_rules": 12,
+   "total_chars": 71225,
+   "median_ratio": 0.16223236223236223,
+   "n_files": 2116
+  },
+  {
+   "repo": "NoDeskAI/browser-pilot",
+   "n_rules": 11,
+   "total_chars": 21212,
+   "median_ratio": 0.6502451442579672,
+   "n_files": 153
+  },
+  {
+   "repo": "OWASP/mastg",
+   "n_rules": 15,
+   "total_chars": 128793,
+   "median_ratio": 0.0,
+   "n_files": 220
+  },
+  {
+   "repo": "Ocean-Industries-Concept-Lab/openbridge-webcomponents",
+   "n_rules": 44,
+   "total_chars": 518431,
+   "median_ratio": 0.1972779405552523,
+   "n_files": 2935
+  },
+  {
+   "repo": "Ohorizons/open-horizons-platform-legacy",
+   "n_rules": 8,
+   "total_chars": 25408,
+   "median_ratio": 0.13633501259445843,
+   "n_files": 311
+  },
+  {
+   "repo": "OmarAlite946/new-vediomix",
+   "n_rules": 4,
+   "total_chars": 1725,
+   "median_ratio": 0.0,
+   "n_files": 115
+  },
+  {
+   "repo": "OndrejMottl/vaultkeepr",
+   "n_rules": 10,
+   "total_chars": 51003,
+   "median_ratio": 0.0,
+   "n_files": 27
+  },
+  {
+   "repo": "PSAppDeployToolkit/PSAppDeployToolkit",
+   "n_rules": 3,
+   "total_chars": 16987,
+   "median_ratio": 0.0,
+   "n_files": 640
+  },
+  {
+   "repo": "Pascu-Victor/wos",
+   "n_rules": 14,
+   "total_chars": 70477,
+   "median_ratio": 0.6956737659094456,
+   "n_files": 599
+  }
+ ],
+ "rulestats": {
+  "total": 1198,
+  "globs": 598,
+  "always": 202,
+  "desc_only": 149,
+  "dead": 249
+ }
+}
