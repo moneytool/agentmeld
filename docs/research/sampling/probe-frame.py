@@ -8,7 +8,8 @@ estimate is then weighted by the recorded band populations.
 Parallel-safe: SLICE/NSLICE partition a *fixed* list, so slices are genuinely
 disjoint (unlike the first attempt, where the pool grew mid-run).
 """
-import json, os, pathlib, random, subprocess, sys, threading, urllib.request
+import json, os, pathlib, random, subprocess, sys, threading, time
+import urllib.error, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 PER_BAND = 800
@@ -35,14 +36,38 @@ def sample():
 def gh(a,t=20):
     try: return subprocess.run(["gh"]+a,capture_output=True,text=True,timeout=t).stdout
     except Exception: return ""
-def has_file(repo,path):
-    try:
-        r=urllib.request.Request(f"https://raw.githubusercontent.com/{repo}/HEAD/{path}",method="HEAD")
-        with urllib.request.urlopen(r,timeout=6) as x: return x.status==200
-    except Exception: return False
-def has_dir(repo,path):
-    s=gh(["api",f"repos/{repo}/contents/{path}","--jq","length"]).strip()
-    return s.isdigit() and int(s)>0
+
+# Absence and failure must not look alike. The first version of this returned
+# False on any exception, so a timeout was recorded identically to a genuine 404
+# and the bias ran silently toward undercounting. These return None on an
+# indeterminate result; callers record it and the analysis excludes it.
+def has_file(repo, path, tries=2):
+    url=f"https://raw.githubusercontent.com/{repo}/HEAD/{path}"
+    for attempt in range(tries):
+        try:
+            r=urllib.request.Request(url, method="HEAD")
+            with urllib.request.urlopen(r, timeout=8) as x:
+                return x.status==200
+        except urllib.error.HTTPError as e:
+            if e.code==404: return False          # authoritative absence
+            if e.code in (403,429) or e.code>=500:
+                time.sleep(1+attempt); continue   # transient, retry
+            return None                           # unexpected status
+        except Exception:
+            time.sleep(1+attempt)                 # network, retry once
+    return None                                   # indeterminate
+
+def has_dir(repo, path, tries=2):
+    for attempt in range(tries):
+        p=subprocess.run(["gh","api",f"repos/{repo}/contents/{path}"],
+                         capture_output=True, text=True, timeout=30)
+        if p.returncode==0:
+            try: return len(json.loads(p.stdout))>0
+            except Exception: return None
+        err=p.stderr or ""
+        if "404" in err or "Not Found" in err: return False
+        time.sleep(1+attempt)
+    return None
 
 def main():
     target=sample()
@@ -54,7 +79,8 @@ def main():
         rec={"repo":r["repo"],"stars":r["stars"],"band":r["band"],"cell":r["cell"],"has":{}}
         for k,p in FILES.items(): rec["has"][k]=has_file(r["repo"],p)
         for k,p in DIRS.items():  rec["has"][k]=has_dir(r["repo"],p)
-        rec["any"]=any(rec["has"].values())
+        rec["indeterminate"]=[k for k,v in rec["has"].items() if v is None]
+        rec["any"]=any(v is True for v in rec["has"].values())
         return rec
     with ThreadPoolExecutor(max_workers=8) as ex:
         for rec in ex.map(one, mine[:600]):
