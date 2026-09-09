@@ -1,0 +1,135 @@
+[
+ {
+  "repo": "Dpro-at/Tel-Agent",
+  "lines": 259,
+  "refs": 4,
+  "own_bytes": 16472,
+  "verdict": "own content"
+ },
+ {
+  "repo": "ForceInjection/AI-fundamentals",
+  "lines": 103,
+  "refs": 1,
+  "own_bytes": 12056,
+  "verdict": "own content"
+ },
+ {
+  "repo": "OrangesHuang/Resonance",
+  "lines": 72,
+  "refs": 2,
+  "own_bytes": 5742,
+  "verdict": "own content"
+ },
+ {
+  "repo": "Pedal-Intelligence/saypi-userscript",
+  "lines": 69,
+  "refs": 2,
+  "own_bytes": 8952,
+  "verdict": "own content"
+ },
+ {
+  "repo": "ThalesGroup/fred",
+  "lines": 328,
+  "refs": 1,
+  "own_bytes": 22037,
+  "verdict": "own content"
+ },
+ {
+  "repo": "avivsinai/agent-message-queue",
+  "lines": 244,
+  "refs": 1,
+  "own_bytes": 15088,
+  "verdict": "own content"
+ },
+ {
+  "repo": "enjalot/latent-scope",
+  "lines": 200,
+  "refs": 2,
+  "own_bytes": 11056,
+  "verdict": "own content"
+ },
+ {
+  "repo": "ffmemes/ff-backend",
+  "lines": 81,
+  "refs": 3,
+  "own_bytes": 2898,
+  "verdict": "own content"
+ },
+ {
+  "repo": "jkroepke/openvpn-auth-oauth2",
+  "lines": 17,
+  "refs": 7,
+  "own_bytes": 495,
+  "verdict": "pointer-dominated"
+ },
+ {
+  "repo": "prime-radiant-inc/streamlinear",
+  "lines": 94,
+  "refs": 1,
+  "own_bytes": 4290,
+  "verdict": "own content"
+ },
+ {
+  "repo": "typedef-ai/fenic",
+  "lines": 90,
+  "refs": 2,
+  "own_bytes": 3355,
+  "verdict": "own content"
+ },
+ {
+  "repo": "CKStudentCouncil/Legislation",
+  "lines": 68,
+  "refs": 2,
+  "own_bytes": 12111,
+  "verdict": "own content"
+ },
+ {
+  "repo": "LMCache/LMCache",
+  "lines": 41,
+  "refs": 1,
+  "own_bytes": 2973,
+  "verdict": "own content"
+ },
+ {
+  "repo": "abhigyanpatwari/GitNexus",
+  "lines": 74,
+  "refs": 11,
+  "own_bytes": 5722,
+  "verdict": "own content"
+ },
+ {
+  "repo": "caretive-ai/project-careti",
+  "lines": 164,
+  "refs": 2,
+  "own_bytes": 7024,
+  "verdict": "own content"
+ },
+ {
+  "repo": "e2b-dev/infra",
+  "lines": 233,
+  "refs": 1,
+  "own_bytes": 8506,
+  "verdict": "own content"
+ },
+ {
+  "repo": "hendrixfreire/linkedin-job-scraper",
+  "lines": 34,
+  "refs": 1,
+  "own_bytes": 1222,
+  "verdict": "own content"
+ },
+ {
+  "repo": "homeassistant-extras/toolbar-status-chips",
+  "lines": 55,
+  "refs": 1,
+  "own_bytes": 4806,
+  "verdict": "own content"
+ },
+ {
+  "repo": "sazardev/networking-with-go",
+  "lines": 56,
+  "refs": 2,
+  "own_bytes": 2654,
+  "verdict": "own content"
+ }
+]

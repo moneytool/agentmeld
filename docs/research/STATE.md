@@ -49,6 +49,7 @@ transferable part.
 | 05 | 14.9% of scoped rules match nothing | **frame is wrong**; own parser bug corrected once |
 | 06 | rule count does not affect adherence; models barely differ | **most carefully checked**; 135 runs, code stored |
 | 07 | **12.3% of active repos carry AI config; 9.5% → 32.2% by stars; `AGENTS.md` > `CLAUDE.md`** | **primary result**; frozen frame, n=4,314, stratified + weighted |
+| 08 | **the AGENTS+CLAUDE pair is 59.5% already single-sourced; only 5.7% duplicate** | **primary result**; n=210, symlinks detected by git mode |
 
 ### The frame problem (important)
 
@@ -162,18 +163,18 @@ years. It is a credential, not a lever.
 
 ## Outstanding
 
-1. **Measure the `AGENTS.md` + `CLAUDE.md` pair (170 repos in the sample).** How
-   many have `CLAUDE.md` as a thin `@AGENTS.md` import rather than a duplicate?
-   This is the single most important open number: it separates agentmeld's real
-   addressable problem from a problem the ecosystem already solved in one line.
-   Watch for the symlink-pointer trap — `raw.githubusercontent` serves the link
-   *target text* for a symlink, which once produced a bogus divergence figure.
-2. Fix `has_file`: distinguish 404 from exception and retry once, so a network
-   error stops being indistinguishable from absence. Do this before finding 07 is
-   cited anywhere.
-3. Recompute findings 02/03/05 on the new frame, or re-scope their claims
-4. Yank 0.1.0 from PyPI (data-loss bug) — needs the owner's PyPI login
-5. Fix the bump workflow (drop `gh pr create`)
-6. Trim the 51-second README demo GIF to ~20s
-7. Manually inspect Gemini's `annotations` 80% — the last unexplained
+1. **Decide what agentmeld is, given finding 08.** The measurement is done and it
+   is not favourable: of the 210 repos carrying both `AGENTS.md` and `CLAUDE.md`,
+   59.5% already single-source (a third of them *by symlink* — the mechanism
+   agentmeld automates), 30.5% deliberately write different content, and 5.7%
+   keep two copies. The remaining case, if there is one, is the formats that
+   *cannot* be symlinked (Cursor `.mdc`, Copilot `applyTo`, Gemini TOML) — which
+   finding 07 shows are an order of magnitude rarer than root instruction files.
+   Both external critiques independently recommended pivoting to `doctor` as the
+   product; this data supports them.
+2. Recompute findings 02/03/05 on the new frame, or re-scope their claims
+3. Yank 0.1.0 from PyPI (data-loss bug) — needs the owner's PyPI login
+4. Fix the bump workflow (drop `gh pr create`)
+5. Trim the 51-second README demo GIF to ~20s
+6. Manually inspect Gemini's `annotations` 80% — the last unexplained
    cross-model gap, and this project's history says check before quoting

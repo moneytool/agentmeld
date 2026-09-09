@@ -18,6 +18,7 @@ number.
 | [05](findings/05-stale-globs.md) | Scoped rules that match nothing | 14.9% of scoped rules match zero files | preliminary, n=60 |
 | [06](findings/06-adherence.md) | Rule count does not affect adherence; models barely differ | all 9 cells within 96.4-100% | **most carefully checked** |
 | [07](findings/07-prevalence-stratified.md) | How common AI config actually is | 12.3% of active repos; 9.5%→32.2% by stars; `AGENTS.md` has overtaken `CLAUDE.md` | **primary result**; frozen frame, n=4,314 |
+| [08](findings/08-agents-claude-pairs.md) | The dominant multi-tool pair is mostly already solved | 59.5% single-source already; only 5.7% keep two copies | **primary result**; n=210, all pairs in the frame |
 
 Finding **07 supersedes the prevalence rates in 01–03 and 05**. Those were
 measured on a GitHub code-search sample, which by construction only returns repos
@@ -53,6 +54,7 @@ scripts/    the collectors themselves, re-runnable
 | Dataset | Rows | Collector |
 |---|---|---|
 | `data/probe-slice-{a,b}.json` | 4,314 repos | `sampling/probe-frame.py` (analysis: `scripts/analyze-prevalence.py`) |
+| `data/agents-claude-pairs.json` | 210 repos with both files | `scripts/classify-agents-claude-pairs.py` |
 | `data/config-cooccurrence.json` | 150 repos probed | `scripts/collect-config-cooccurrence.py` |
 | `data/config-cooccurrence-typed.json` | multi-config repos, file types resolved | — |
 | `data/glob-ratios.json` | 120 repos / 1,001 rules | `scripts/collect-glob-ratios.py` |

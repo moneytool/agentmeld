@@ -94,12 +94,14 @@ This is the number that bears on agentmeld's premise, and it is a real one: a th
 adopters — half of the most-watched projects — maintain config for two or more tools.
 
 But note *which* pair dominates. The single most common multi-tool configuration is
-`AGENTS.md` + `CLAUDE.md`, and Claude Code supports `@AGENTS.md` as a one-line import
-from `CLAUDE.md`. Some unknown share of those 170 repos have therefore already solved
-the problem with one line of Markdown and no tooling. **Open question, and the most
-important one for the project's positioning:** of those 170, how many are thin imports
-versus genuine duplicates? Until that is measured, "34.6% of adopters have a
-multi-tool problem" is an upper bound, not the addressable market.
+`AGENTS.md` + `CLAUDE.md` — 170 repos carry only that pair, 210 carry both alongside
+anything else — and Claude Code supports `@AGENTS.md` as a one-line import from
+`CLAUDE.md`.
+
+**Now measured: see [finding 08](08-agents-claude-pairs.md).** Of those 210, 59.5%
+already have one source of truth (symlink or one-line import) and only 5.7% maintain
+two copies. So "34.6% of adopters have a multi-tool problem" is an upper bound that
+the data does not support for this pair.
 
 ## Threats to validity
 
