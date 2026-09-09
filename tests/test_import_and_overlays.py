@@ -242,3 +242,23 @@ class TestUpgradesFromOlderLayouts:
         from agentmeld.config import load_config
 
         assert load_config(tmp_path).instructions_rel == "AGENTS.md"
+
+
+class TestMirrorPermissions:
+    """A mirror only its author can read is useless in a container or a shared
+    checkout, and mkstemp makes 0600 files by default."""
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX modes only")
+    def test_a_mirror_written_by_an_older_version_is_repaired(self, agents_repo, run_cli):
+        mirror = agents_repo / "CLAUDE.md"
+        os.chmod(mirror, 0o600)
+        # Content is already correct, so this is the unchanged path -- the one that
+        # would otherwise never touch the file again.
+        assert run_cli("--root", str(agents_repo), "sync") == EXIT_OK
+        assert mirror.stat().st_mode & 0o044, oct(mirror.stat().st_mode)
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX modes only")
+    def test_repairing_a_mode_is_not_reported_as_drift(self, agents_repo, run_cli):
+        """--check must stay clean: no content changed."""
+        os.chmod(agents_repo / "CLAUDE.md", 0o600)
+        assert run_cli("--root", str(agents_repo), "sync", "--check") == EXIT_OK

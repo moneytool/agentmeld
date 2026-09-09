@@ -89,6 +89,26 @@ def _default_file_mode() -> int:
     return 0o644 & ~umask
 
 
+def normalise_mode(path: Path) -> bool:
+    """Give an existing mirror the default mode. True when it had to change.
+
+    Files written by older versions are 0600 and stay that way: their content
+    already matches, so sync classifies them as unchanged and never rewrites them.
+    Fixing only newly written files would leave every existing repo broken.
+    """
+    if path.is_symlink() or not path.is_file():
+        return False
+    wanted = _default_file_mode()
+    try:
+        current = path.stat().st_mode & 0o777
+        if current == wanted:
+            return False
+        os.chmod(str(path), wanted)
+    except OSError:
+        return False
+    return True
+
+
 def atomic_write_bytes(path: Path, data: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, tmp_name = tempfile.mkstemp(dir=str(path.parent), prefix=".agm-", suffix=".tmp")

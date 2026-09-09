@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.2.0] - 2026-09-09
 
 ### Added
 
@@ -36,8 +36,11 @@
 ### Fixed
 
 - Generated mirrors were created `0600` because `mkstemp` does; they are now
-  `0644` minus umask. An instruction file others cannot read is useless, and the
-  mode showed up as a spurious change in every diff.
+  `0644` minus umask, and `sync` repairs the mode on files an older version
+  already wrote. An instruction file that only its author can read is useless --
+  in a container running as another user, or on a shared checkout, the tool reads
+  nothing. (Git itself is unaffected: it records only the executable bit, so
+  these never appeared in a diff.)
 - An edited `import` mirror could be silently overwritten: being recorded in state
   was treated as proof of ownership without comparing against what was last
   written.

@@ -349,7 +349,7 @@ def _check_collisions(plan: SyncPlan) -> None:
 
 def apply_plan(plan: SyncPlan, config: Config, state: State, mode: str) -> int:
     """Write every non-conflicting change and update state. Returns count written."""
-    from .linker import apply_mirror
+    from .linker import apply_mirror, normalise_mode
     from .transform.mcp import canonical_servers
 
     written = 0
@@ -359,6 +359,11 @@ def apply_plan(plan: SyncPlan, config: Config, state: State, mode: str) -> int:
         if mirror.action is not Action.UNCHANGED:
             apply_mirror(mirror, mode, canonical=config.canonical)
             written += 1
+        elif mirror.strategy is not Strategy.LINK:
+            # Content is right but the mode may not be, on anything an older
+            # version wrote. Not counted as a write: nothing about the file's
+            # content changed, so --check must still report the repo as clean.
+            normalise_mode(mirror.target)
 
         rel = config.rel(mirror.target)
         owned: List[str] = []
