@@ -6,9 +6,11 @@ detect = ["CLAUDE.md", ".claude/skills/", ".claude/agents/", ".claude/commands/"
 
 [kinds.instructions]
 target = "CLAUDE.md"
-strategy = "link"
+strategy = "import"
+import_line = "@{path}"
 aggregate_rules = true
-note = "Claude Code has no per-file rule mechanism, so rules fold in here."
+note = """
+Claude Code resolves @path imports inside CLAUDE.md, so the mirror is a one-line file rather than a symlink -- no core.symlinks, no Windows Developer Mode, and nothing to serialise wrongly on a non-POSIX filesystem. It is also the convention already in use: of 30 hand-written pointer files sampled from public repos, 21 were exactly this. Claude Code has no per-file rule mechanism, so rules fold in below the import."""
 
 [kinds.skill]
 target = ".claude/skills/{slug}/SKILL.md"

@@ -45,13 +45,41 @@ note = "Seen in community docs; not in the vendor's own documentation."
 
 | Strategy | Use when |
 |---|---|
-| `link` | the vendor reads the canonical bytes unchanged |
+| `import` | the vendor can be told to read another file |
+| `link` | the vendor reads the canonical bytes unchanged and cannot be told to import |
 | `generate` | frontmatter keys or the file format differ |
 | `merge` | the target is shared config the user also edits (MCP, settings.json) |
 | `aggregate` | the tool has one instruction file and no rule mechanism |
 
-Prefer `link` whenever it is truthful — it is the whole point of the project.
+**Prefer `import` over `link`.** A symlink fails silently in four common
+situations — Windows without Developer Mode, `core.symlinks=false`, archive and
+container builds that drop links, and SMB/CIFS, which writes the link into the
+file body as `XSym` — and in each one the tool reads the pointer as its
+instructions and follows nothing. Three of 67 symlinked mirrors in a sample of 210
+public repos are already corrupted this way, and nobody noticed, because on the
+author's machine it works.
+
+```toml
+[kinds.instructions]
+target = "YOURTOOL.md"
+strategy = "import"
+import_line = "@{path}"          # {path} is filled in relative to the mirror
+```
+
+`import_line` is a fact about the vendor, so it lives in the registry. Only claim
+it with `confidence = "verified"` if the vendor documents the syntax — an import
+that the tool does not actually understand is worse than a copy, because the file
+looks fine and contains nothing.
+
 Never use `link` if the vendor would misread the canonical frontmatter.
+
+### Overlays are not your problem
+
+A per-tool overlay (`.ai/overlays/<your-id>.md`) is appended to your tool's
+instruction mirror automatically, using your adapter id as the filename. You do
+not declare anything for it. The only thing to know is that an overlay forces a
+real file: a symlink cannot carry per-tool content, so a `link` mirror is upgraded
+to a generated document when one exists.
 
 ## Running the tests
 

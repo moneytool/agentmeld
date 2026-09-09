@@ -58,12 +58,28 @@ def parse_adapter(data: Mapping[str, Any], where: str = "<adapter>") -> Adapter:
                 "{}: 'target' must be repo-relative and must not escape upward".format(loc)
             )
 
+        import_line = block.get("import_line", "")
+        if strategy is Strategy.IMPORT:
+            if not import_line:
+                raise AdapterSchemaError(
+                    "{}: strategy='import' needs 'import_line' (e.g. \"@{{path}}\")".format(loc)
+                )
+            if "{path}" not in import_line:
+                raise AdapterSchemaError(
+                    "{}: 'import_line' must contain {{path}}".format(loc)
+                )
+        elif import_line:
+            raise AdapterSchemaError(
+                "{}: 'import_line' only means something with strategy='import'".format(loc)
+            )
+
         raw_conf = block.get("confidence")
         kinds[kind] = KindSpec(
             kind=kind,
             target=target,
             strategy=strategy,
             transformer=block.get("transformer"),
+            import_line=import_line,
             frontmatter=dict(block.get("frontmatter", {})),
             defaults=dict(block.get("defaults", {})),
             confidence=_enum(Confidence, raw_conf, loc, "confidence") if raw_conf else None,

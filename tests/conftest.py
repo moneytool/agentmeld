@@ -37,6 +37,31 @@ def repo(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
+def tidy_repo(tmp_path: Path) -> Path:
+    """A repo whose instruction files agree, so mirrors stay plain symlinks.
+
+    The ``repo`` fixture deliberately has *drifted* content, which now becomes a
+    per-tool overlay -- and a file with an overlay cannot be a symlink. Shape
+    tests need a repo where nothing diverges.
+    """
+    shared = "# Working here\n\nRun tests with pytest.\n"
+    _write(tmp_path / "AGENTS.md", shared)
+    _write(tmp_path / ".github/copilot-instructions.md", shared)
+    _write(tmp_path / "GEMINI.md", shared)
+    _write(
+        tmp_path / ".claude/skills/deploy/SKILL.md",
+        "---\nname: deploy\ndescription: Deploy to staging\n---\nRun deploy.\n",
+    )
+    _write(tmp_path / ".claude/skills/deploy/notes.md", "reference\n")
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    for key, value in (("user.email", "t@t.t"), ("user.name", "t")):
+        subprocess.run(["git", "config", key, value], cwd=tmp_path, check=True)
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-qm", "init"], cwd=tmp_path, check=True, capture_output=True)
+    return tmp_path
+
+
+@pytest.fixture
 def run_cli():
     """Invoke the CLI in-process and return its exit code."""
     from agentmeld.cli import main

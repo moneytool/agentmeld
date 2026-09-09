@@ -63,6 +63,45 @@ def _materialise(path: Path) -> Tuple[bool, str]:
     return True, "file"
 
 
+def _inline_import(path: Path) -> Tuple[bool, str]:
+    """Splice the imported file's content into an import mirror.
+
+    Ejecting means "agentmeld is gone and everything still works". A one-line
+    ``@AGENTS.md`` would keep working, but only for as long as that other file
+    survives, and it still carries a header telling the reader to edit somewhere
+    else. Inlining makes the file stand on its own, which is the promise.
+    """
+    if path.is_symlink() or not path.is_file():
+        return False, ""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return False, ""
+
+    from .transform import HEADER_TOKEN
+
+    out: List[str] = []
+    inlined = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not inlined and stripped.startswith("@") and len(stripped.split()) == 1:
+            imported = (path.parent / stripped[1:]).resolve()
+            if not imported.is_file():
+                return False, "import target missing"
+            body = imported.read_text(encoding="utf-8", errors="replace").rstrip("\n")
+            out.append(body)
+            inlined = True
+            continue
+        if HEADER_TOKEN in line:
+            continue  # no longer true: there is nothing else to edit
+        out.append(line)
+
+    if not inlined:
+        return False, ""
+    path.write_bytes(("\n".join(out).strip("\n") + "\n").encode("utf-8"))
+    return True, "file"
+
+
 def _remove_hooks(config: Config, dry_run: bool) -> List[str]:
     """Undo install-hooks, touching only the entries we added."""
     from .hooks import MANAGED_HOOK_COMMANDS, PRE_COMMIT_END, PRE_COMMIT_MARKER
@@ -218,11 +257,19 @@ def run_restore(config: Config, registry: Dict[str, Adapter], state: State, args
     else:
         for managed in state.managed_paths():
             path = config.root / managed
+            entry = state.get(managed)
+            is_import = entry is not None and entry.strategy == str(Strategy.IMPORT)
             if dry_run:
                 if path.is_symlink():
                     lines.append("would turn {} into a real file".format(managed))
+                elif is_import:
+                    lines.append("would inline the import in {}".format(managed))
                 continue
             changed, kind = _materialise(path)
+            if not changed and is_import:
+                changed, kind = _inline_import(path)
+                if changed:
+                    kind = "standalone file"
             if changed:
                 lines.append("{} is now a real {}".format(managed, kind))
 

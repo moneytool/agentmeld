@@ -107,8 +107,12 @@ def cmd_sync(args) -> int:
     from .planner import apply_plan, build_plan, select_adapters
 
     config, registry, state = _context(args)
-    if not config.canonical.is_dir():
-        print("no {}/ directory -- run 'agentmeld init' first".format(config.canonical_dir))
+    if not (config.canonical.is_dir() or config.config_path.is_file()):
+        # Sync creates files in vendor locations, so it stays an explicitly
+        # initialised operation even though a canonical *directory* is no longer
+        # required -- init is where the user consents to that, and where an
+        # existing root instruction file is adopted in place rather than moved.
+        print("not initialised here -- run 'agentmeld init' first")
         return EXIT_ERROR
 
     mode = resolve_mode(config.mode, config.root)
@@ -125,7 +129,11 @@ def cmd_sync(args) -> int:
 
     assets = discover_assets(config)
     if not assets:
-        print("no canonical assets found under {}/".format(config.canonical_dir))
+        print(
+            "no canonical assets found ({} or {}/)".format(
+                config.instructions_rel, config.canonical_dir
+            )
+        )
         return EXIT_OK
 
     adapters = select_adapters(registry, config, state, args.targets or None)
@@ -273,8 +281,13 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--no-sync", action="store_true", help="adopt without fanning out")
     p.set_defaults(func=cmd_adopt)
 
-    p = sub.add_parser("watch", help="adopt and fan out automatically as files change")
+    p = sub.add_parser("watch", help="report (or with --write, fan out) as files change")
     common(p)
+    p.add_argument(
+        "--write",
+        action="store_true",
+        help="actually adopt and fan out; without it, changes are only reported",
+    )
     p.add_argument("--interval", type=float, default=1.0, help="poll interval in seconds")
     p.add_argument("--once", action="store_true", help="one pass, for testing")
     p.add_argument("--timeout", type=float, help="stop after this many seconds")

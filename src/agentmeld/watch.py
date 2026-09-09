@@ -1,4 +1,13 @@
-"""Watch mode: adopt and fan out as files change.
+"""Watch mode: report -- and optionally fan out -- as files change.
+
+**Read-only unless you pass ``--write``.** Fanning out automatically is the wrong
+default. Nearly a third of repos carrying two instruction files write genuinely
+different content in each, on purpose, and copying one over the other destroys
+that. Worse, Claude Code's ``#`` shortcut appends to CLAUDE.md, so an eager
+watcher would take a Claude-specific note and broadcast it to every other tool.
+
+Prefer ``sync --check`` in CI: a failing check cannot be quietly lost, whereas a
+daemon dies silently and nobody notices for a week.
 
 Polling, deliberately. A ``watchdog``-style native watcher would cut latency, but
 a poll of a handful of small config directories costs almost nothing, behaves the
@@ -78,7 +87,12 @@ def _changed(previous, current) -> bool:
     return previous != current
 
 
-def reconcile(config: Config, registry: Dict[str, Adapter], state: State) -> List[str]:
+def reconcile(
+    config: Config,
+    registry: Dict[str, Adapter],
+    state: State,
+    dry_run: bool = False,
+) -> List[str]:
     """Adopt every unmanaged vendor file that belongs in the canonical tree.
 
     This is a full pass over the watched locations rather than a diff, because the
@@ -98,18 +112,19 @@ def reconcile(config: Config, registry: Dict[str, Adapter], state: State) -> Lis
                 continue
             if is_ours(path, rel, state) or classify_path(rel, registry) is None:
                 continue
-            line = adopt_path(path, config, registry, state, dry_run=False)
+            line = adopt_path(path, config, registry, state, dry_run=dry_run)
             if line:
                 adopted.append(line)
-    if adopted:
+    if adopted and not dry_run:
         state.save(config.state_path)
     return adopted
 
 
-def _sync_once(config: Config, quiet: bool = True) -> int:
+def _sync_once(config: Config, quiet: bool = True, check: bool = False) -> int:
     from .cli import build_parser, cmd_sync
 
-    args = build_parser().parse_args(["sync"])
+    argv = ["sync", "--check"] if check else ["sync"]
+    args = build_parser().parse_args(argv)
     args.root = str(config.root)
     args.include_unverified = config.include_unverified
     args.quiet = quiet
@@ -123,15 +138,23 @@ def run_watch(config: Config, registry: Dict[str, Adapter], state: State, args) 
         print("no {}/ directory -- run 'agentmeld init' first".format(config.canonical_dir))
         return EXIT_ERROR
 
+    write = bool(getattr(args, "write", False))
     roots = watch_roots(config, registry)
-    print("watching {} location(s) every {}s -- ctrl-c to stop".format(len(roots), args.interval))
+    print(
+        "watching {} location(s) every {}s -- ctrl-c to stop".format(len(roots), args.interval)
+    )
+    if not write:
+        print(
+            "report-only: changes are listed, nothing is written. Pass --write to "
+            "adopt and fan out automatically -- note that doing so copies one tool's "
+            "new content to every other tool, which is wrong when they differ on "
+            "purpose."
+        )
     for root in roots:
         print("  {}".format(config.rel(root)))
 
     if args.once:
-        for line in reconcile(config, registry, state):
-            print("  adopted: {}".format(line))
-        return _sync_once(config, quiet=False)
+        return _cycle(config, registry, state, write, quiet=False)
 
     previous = snapshot(roots)
     started = time.time()
@@ -142,9 +165,7 @@ def run_watch(config: Config, registry: Dict[str, Adapter], state: State, args) 
 
         current = snapshot(roots)
         if _changed(previous, current):
-            for line in reconcile(config, registry, state):
-                print("  adopted: {}".format(line))
-            _sync_once(config, quiet=True)
+            _cycle(config, registry, state, write, quiet=True)
 
             # Refresh *after* writing, so our own output is never seen as a change.
             roots = watch_roots(config, registry)
@@ -162,6 +183,22 @@ def run_watch(config: Config, registry: Dict[str, Adapter], state: State, args) 
 
         if args.timeout is not None and time.time() - started >= args.timeout:
             return EXIT_OK
+
+
+def _cycle(config: Config, registry, state: State, write: bool, quiet: bool) -> int:
+    """One pass: either report what would change, or adopt and fan out."""
+    from .cli import EXIT_DRIFT, EXIT_OK
+
+    if not write:
+        pending = reconcile(config, registry, state, dry_run=True)
+        for line in pending:
+            print("  would adopt: {}".format(line))
+        code = _sync_once(config, quiet=quiet, check=True)
+        return EXIT_DRIFT if (pending or code == EXIT_DRIFT) else EXIT_OK
+
+    for line in reconcile(config, registry, state):
+        print("  adopted: {}".format(line))
+    return _sync_once(config, quiet=quiet)
 
 
 def _adopt_new(paths: List[str], config: Config, registry, state: State) -> List[str]:

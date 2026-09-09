@@ -10,7 +10,7 @@ import datetime as _dt
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence
 
-from .config import Config
+from .config import Config, load_overlays
 from .detect import detect_tools
 from .model import (
     Action,
@@ -63,6 +63,18 @@ def _by_kind(assets: Sequence[Asset]) -> Dict[AssetKind, List[Asset]]:
     return grouped
 
 
+def _import_path(source: Path, target: Path) -> str:
+    """The canonical path as the importing file must spell it.
+
+    Vendor import syntax resolves relative to the file doing the importing, so a
+    mirror in ``.github/`` needs ``../AGENTS.md`` where a root mirror needs
+    ``AGENTS.md``.
+    """
+    import os as _os
+
+    return Path(_os.path.relpath(str(source), start=str(target.parent))).as_posix()
+
+
 def _context(config: Config, asset: Optional[Asset], tool: str, extra: bytes = b"") -> GenContext:
     raw = (asset.raw or b"") if asset is not None else b""
     return GenContext(
@@ -85,6 +97,7 @@ def build_plan(
     plan = SyncPlan()
     grouped = _by_kind(assets)
     rules = grouped.get(AssetKind.RULE, [])
+    overlays = load_overlays(config)
 
     for adapter in adapters:
         for kind, spec in adapter.kinds.items():
@@ -98,7 +111,9 @@ def build_plan(
 
             if kind is AssetKind.INSTRUCTIONS:
                 plan.mirrors.extend(
-                    _plan_instructions(config, adapter, spec, grouped, rules, state, mode)
+                    _plan_instructions(
+                        config, adapter, spec, grouped, rules, state, mode, overlays
+                    )
                 )
                 continue
 
@@ -112,27 +127,85 @@ def build_plan(
     return plan
 
 
-def _plan_instructions(config, adapter, spec, grouped, rules, state, mode) -> List[Mirror]:
+def _plan_instructions(
+    config, adapter, spec, grouped, rules, state, mode, overlays=None
+) -> List[Mirror]:
     from .linker import classify
+    from .transform.importer import render_import
 
+    overlays = overlays or {}
     instructions = (grouped.get(AssetKind.INSTRUCTIONS) or [None])[0]
-    folds_rules = spec.aggregate_rules and rules and not adapter.supports(AssetKind.RULE)
+    folds_rules = bool(spec.aggregate_rules and rules and not adapter.supports(AssetKind.RULE))
+    overlay = overlays.get(adapter.id, "")
+    overlay_source = config.rel(config.overlays_dir / "{}.md".format(adapter.id)) if overlay else ""
 
     if instructions is None and not folds_rules:
         return []
 
     target = config.root / spec.render_target("instructions")
-    source = instructions.path if instructions is not None else config.canonical / "instructions.md"
+    source = instructions.path if instructions is not None else config.instructions_path
 
-    if folds_rules:
-        extra = b"".join(sorted((r.raw or b"") for r in rules))
-        ctx = _context(config, instructions, adapter.id, extra=extra)
-        if instructions is None:
-            ctx = GenContext(
-                source=config.rel(config.canonical / "rules"),
-                source_hash=source_hash(extra),
-                tool=adapter.id,
-            )
+    if config.rel(target) == config.rel(source):
+        # The source of truth is not a mirror of itself. This is the normal case
+        # once canonical instructions live at the repo root: the AGENTS.md adapter
+        # has nothing to write, and saying so is clearer than silently omitting it.
+        mirror = Mirror(
+            adapter_id=adapter.id,
+            kind=AssetKind.INSTRUCTIONS,
+            slug="instructions",
+            source=source,
+            target=target,
+            strategy=spec.strategy,
+            action=Action.SKIP,
+            reason="this file is the source of truth; {} reads it directly".format(adapter.name),
+        )
+        return [mirror]
+
+    extra = b"".join(sorted((r.raw or b"") for r in rules)) if folds_rules else b""
+    extra += overlay.encode("utf-8")
+    ctx = _context(config, instructions, adapter.id, extra=extra)
+    if instructions is None:
+        ctx = GenContext(
+            source=config.rel(config.canonical / "rules"),
+            source_hash=source_hash(extra),
+            tool=adapter.id,
+        )
+
+    if spec.strategy is Strategy.IMPORT:
+        payload = render_import(
+            spec,
+            _import_path(source, target),
+            ctx,
+            overlay=overlay,
+            overlay_source=overlay_source,
+            rules=rules if folds_rules else (),
+        )
+        bits = ["points at {}".format(config.rel(source))]
+        if folds_rules:
+            bits.append("{} rule(s) folded in".format(len(rules)))
+        if overlay:
+            bits.append("plus the {} overlay".format(adapter.id))
+        mirror = Mirror(
+            adapter_id=adapter.id,
+            kind=AssetKind.INSTRUCTIONS,
+            slug="instructions",
+            source=source,
+            target=target,
+            strategy=Strategy.IMPORT,
+            payload=payload,
+            reason=", ".join(bits),
+        )
+    elif folds_rules or overlay:
+        # A symlink cannot carry a per-tool addition, and neither can a copy that
+        # must stay byte-identical -- so any tool-specific content forces a real
+        # generated document.
+        why = []
+        if folds_rules:
+            why.append("{} has no per-file rule mechanism; {} rule(s) folded in".format(
+                adapter.name, len(rules)
+            ))
+        if overlay:
+            why.append("{} overlay appended".format(adapter.id))
         mirror = Mirror(
             adapter_id=adapter.id,
             kind=AssetKind.INSTRUCTIONS,
@@ -140,10 +213,14 @@ def _plan_instructions(config, adapter, spec, grouped, rules, state, mode) -> Li
             source=source,
             target=target,
             strategy=Strategy.AGGREGATE,
-            payload=aggregate(instructions, rules, ctx),
-            reason="{} has no per-file rule mechanism; {} rule(s) folded in".format(
-                adapter.name, len(rules)
+            payload=aggregate(
+                instructions,
+                rules if folds_rules else (),
+                ctx,
+                overlay=overlay,
+                overlay_source=overlay_source,
             ),
+            reason="; ".join(why),
         )
     else:
         mirror = Mirror(

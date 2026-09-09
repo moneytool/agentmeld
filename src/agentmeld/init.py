@@ -10,21 +10,31 @@ from __future__ import annotations
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from .adopt import adopt_path, is_ours
-from .config import CONFIG_NAME, Config
+from .config import CONFIG_NAME, ROOT_INSTRUCTION_CANDIDATES, Config
 from .model import Adapter, AssetKind
 from .state import State
 
-__all__ = ["run_init", "candidate_paths", "worktree_dirty"]
+__all__ = [
+    "run_init",
+    "candidate_paths",
+    "worktree_dirty",
+    "plan_canonical_instructions",
+    "seed_overlays",
+]
 
 CONFIG_TEMPLATE = '''\
 # agentmeld -- one AI context, every agent.
 # https://github.com/moneytool/agentmeld
 
 [agentmeld]
-# Where the single source of truth lives.
+# The single source of truth for instructions. Left at the repo root when a file
+# is already there, so no tool has to be reconfigured and nothing moves.
+instructions = "{instructions}"
+
+# Rules, skills, agents, commands, MCP config and per-tool overlays live here.
 canonical_dir = "{canonical_dir}"
 
 # auto: use symlinks where the filesystem allows, copies where it does not.
@@ -45,6 +55,12 @@ include_unverified = {include_unverified}
 #: Instruction files, best first. The richest existing document becomes canonical
 #: and the rest become mirrors of it.
 INSTRUCTION_PREFERENCE = ("CLAUDE.md", "AGENTS.md", ".github/copilot-instructions.md", "GEMINI.md")
+
+#: Overlap below which two instruction files are treated as saying different
+#: things rather than as drifted copies of one thing. Public repos carrying both
+#: AGENTS.md and CLAUDE.md are bimodal on this measure -- most pairs sit under
+#: 0.1 or over 0.9, with very little between -- so the exact cut matters little.
+DIVERGENCE_OVERLAP = 0.9
 
 
 def worktree_dirty(root: Path) -> bool:
@@ -95,6 +111,141 @@ def _backup(paths: List[Path], config: Config) -> Path:
     return destination
 
 
+def _overlap(left: str, right: str) -> float:
+    """Jaccard overlap of the word sets of two documents.
+
+    Set overlap rather than sequence similarity on purpose: a difference-based
+    ratio is biased by length, and scored the same real pairs at 0.019 where this
+    scores them 0.246.
+    """
+    import re
+
+    words = re.compile(r"[A-Za-z0-9_./-]+")
+    a = {w.lower() for w in words.findall(left) if len(w) > 1}
+    b = {w.lower() for w in words.findall(right) if len(w) > 1}
+    if not a or not b:
+        return 0.0
+    return len(a & b) / len(a | b)
+
+
+#: Content left after removing references to the canonical file, below which a
+#: file is a pointer rather than a document of its own. Matches the threshold used
+#: to classify hand-written pointer files in public repos.
+POINTER_RESIDUAL_BYTES = 200
+
+
+def _is_pointer_only(text: str, canonical_rel: str) -> bool:
+    """True when this file's only content is "read the other one".
+
+    Someone who already wrote ``@AGENTS.md`` by hand has solved the problem the way
+    we would. Treating that one line as tool-specific content to preserve would
+    fold the pointer into an overlay and emit it *twice*.
+    """
+    import re
+
+    name = re.escape(Path(canonical_rel).name)
+    if not re.search(name, text, re.IGNORECASE):
+        # No mention of the canonical file at all, so whatever this says, it is not
+        # "read the other one". Without this guard a short file of real guidance
+        # looks like a pointer purely because it is short.
+        return False
+
+    residual = []
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        if re.search(name, line, re.IGNORECASE):
+            continue
+        if line.lstrip().startswith("#"):
+            continue  # a heading is scaffolding, not content
+        residual.append(line.strip())
+    return len("\n".join(residual).encode("utf-8")) <= POINTER_RESIDUAL_BYTES
+
+
+def plan_canonical_instructions(candidates: List[Path], config: Config):
+    """Where the source of truth should live: ``(canonical_rel, rename_from)``.
+
+    AGENTS.md, always, when the repo has any root instruction file at all. Three
+    reasons, in order of weight:
+
+    * It is the vendor-neutral standard, read directly by most tools, the most
+      common AI config file in public repos, and the only one whose share grows
+      with a project's popularity. An existing AGENTS.md therefore needs **no
+      migration whatsoever** -- which is the common case.
+    * The source of truth must not be a *vendor's* own path. If CLAUDE.md were
+      canonical, Claude Code would have no mirror -- and a tool with no mirror
+      cannot receive rules folded into one, so its rules would silently never
+      load.
+    * A repo with only CLAUDE.md is renamed to AGENTS.md rather than copied.
+      CLAUDE.md comes straight back as a one-line import, so Claude Code is
+      unaffected, no content changes, and the diff is a rename plus an 11-byte
+      file rather than a second copy of the same document.
+    """
+    rels = {config.rel(p): p for p in candidates}
+    if "AGENTS.md" in rels:
+        return "AGENTS.md", None
+    for name in ROOT_INSTRUCTION_CANDIDATES:
+        if name in rels:
+            return "AGENTS.md", rels[name]
+    return None, None
+
+
+def seed_overlays(
+    candidates: List[Path],
+    canonical_rel: str,
+    config: Config,
+    registry: Dict[str, Adapter],
+) -> List[str]:
+    """Preserve a sibling instruction file whose content is genuinely different.
+
+    Two root instruction files usually mean one of two things. Either they are
+    copies, in which case the second is redundant and a mirror replaces it -- or
+    they say different things, because someone deliberately wrote tool-specific
+    guidance. Nearly a third of such pairs in public repos are the second kind, so
+    overwriting the loser would be data loss. Instead its content becomes that
+    tool's overlay: still reaching that tool, no longer duplicated.
+    """
+    from .adopt import classify_path
+
+    lines: List[str] = []
+    try:
+        canonical_text = (config.root / canonical_rel).read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return lines
+
+    for path in candidates:
+        rel = config.rel(path)
+        if rel == canonical_rel or not path.is_file():
+            continue
+        hit = classify_path(rel, registry)
+        if hit is None:
+            continue
+        adapter, spec, _slug = hit
+        if spec.kind is not AssetKind.INSTRUCTIONS:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        if not text.strip():
+            continue
+        if _is_pointer_only(text, canonical_rel):
+            continue  # already points at the canonical file; there is nothing to keep
+        if _overlap(canonical_text, text) >= DIVERGENCE_OVERLAP:
+            continue  # a copy; the mirror supersedes it
+        destination = config.overlays_dir / "{}.md".format(adapter.id)
+        if destination.exists():
+            continue
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(text.strip("\n").encode("utf-8") + b"\n")
+        lines.append(
+            "{} differs from {} -- kept as {} so it still reaches {}".format(
+                rel, canonical_rel, config.rel(destination), adapter.name
+            )
+        )
+    return lines
+
+
 def _pick_instructions(candidates: List[Path], config: Config) -> List[Path]:
     """Order instruction files so the preferred, largest one is adopted first."""
     rels = {config.rel(p): p for p in candidates}
@@ -136,10 +287,38 @@ def run_init(config: Config, registry: Dict[str, Adapter], state: State, args) -
 
     config.canonical.mkdir(parents=True, exist_ok=True)
 
+    # An existing root instruction file becomes the source of truth where it is.
+    keep_in_place, rename_from = (
+        plan_canonical_instructions(candidates, config) if migrate else (None, None)
+    )
+    if keep_in_place:
+        config.instructions = keep_in_place
+
     if migrate and candidates:
         backup = _backup(candidates, config)
         print("backed up {} file(s) to {}".format(len(candidates), config.rel(backup)))
+        if rename_from is not None:
+            import os as _os
+
+            destination = config.root / keep_in_place
+            _os.replace(str(rename_from), str(destination))
+            candidates = [p for p in candidates if p != rename_from] + [destination]
+            print(
+                "  {} -> {} (renamed; it comes back as a one-line import)".format(
+                    config.rel(rename_from), keep_in_place
+                )
+            )
+        if keep_in_place:
+            print("  {} is the source of truth".format(keep_in_place))
+            for line in seed_overlays(candidates, keep_in_place, config, registry):
+                print("  " + line)
         for path in _pick_instructions(candidates, config):
+            if keep_in_place and _is_instructions(path, config, registry):
+                # One instruction file is already canonical. Adopting another
+                # would create a second source of truth -- and its content is
+                # either a duplicate (a mirror replaces it) or divergent (already
+                # preserved as an overlay just above).
+                continue
             line = adopt_path(path, config, registry, state, dry_run=False)
             if line:
                 print("  " + line)
@@ -147,6 +326,7 @@ def run_init(config: Config, registry: Dict[str, Adapter], state: State, args) -
             print("  " + line)
 
     config.config_path.write_bytes((CONFIG_TEMPLATE.format(
+            instructions=config.instructions_rel,
             canonical_dir=config.canonical_dir,
             mode=config.mode,
             git_policy=config.git_policy,
@@ -154,7 +334,7 @@ def run_init(config: Config, registry: Dict[str, Adapter], state: State, args) -
         )).encode("utf-8"))
     print("wrote {}".format(config.rel(config.config_path)))
 
-    if not (config.canonical / "instructions.md").exists():
+    if not keep_in_place and not (config.canonical / "instructions.md").exists():
         (config.canonical / "instructions.md").write_bytes(
             (
                 "# Project instructions\n\n"
@@ -176,6 +356,13 @@ def run_init(config: Config, registry: Dict[str, Adapter], state: State, args) -
     return cmd_sync(sync_args)
 
 
+def _is_instructions(path: Path, config: Config, registry: Dict[str, Adapter]) -> bool:
+    from .adopt import classify_path
+
+    hit = classify_path(config.rel(path), registry)
+    return hit is not None and hit[1].kind is AssetKind.INSTRUCTIONS
+
+
 def _clear_superseded(candidates, config: Config, registry, state: State) -> List[str]:
     """Remove originals whose content is now canonical, so mirrors can take over.
 
@@ -195,7 +382,14 @@ def _clear_superseded(candidates, config: Config, registry, state: State) -> Lis
         _adapter, spec, slug = hit
         if spec.strategy.value == "merge":
             continue  # shared config; sync merges into it rather than replacing it
-        destination = canonical_dest(config, spec.kind, slug)
+        if spec.kind is AssetKind.INSTRUCTIONS:
+            # Instructions may be canonical at the repo root rather than inside the
+            # canonical tree, so ask the config where the source of truth is.
+            destination = config.instructions_path
+            if config.rel(path) == config.instructions_rel:
+                continue  # this *is* the source of truth
+        else:
+            destination = canonical_dest(config, spec.kind, slug)
         if not destination.exists():
             continue
         path.unlink()

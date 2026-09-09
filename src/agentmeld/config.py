@@ -16,11 +16,26 @@ if sys.version_info >= (3, 11):
 else:  # pragma: no cover
     import tomli as tomllib
 
-__all__ = ["Config", "find_repo_root", "load_config", "discover_assets", "CONFIG_NAME"]
+__all__ = [
+    "Config",
+    "find_repo_root",
+    "load_config",
+    "discover_assets",
+    "load_overlays",
+    "CONFIG_NAME",
+    "ROOT_INSTRUCTION_CANDIDATES",
+]
 
 CONFIG_NAME = "agentmeld.toml"
 STATE_NAME = ".state.json"
 DEFAULT_CANONICAL = ".ai"
+
+#: Root files that are already a cross-vendor instruction document, most
+#: preferred first. When one of these exists we make it the source of truth
+#: rather than moving it into the canonical tree: AGENTS.md is the most common
+#: AI config file in public repos and its lead grows with popularity, so
+#: relocating it charges every adopter a migration for no benefit.
+ROOT_INSTRUCTION_CANDIDATES = ("AGENTS.md", "CLAUDE.md")
 
 
 @dataclass
@@ -39,9 +54,36 @@ class Config:
     include_unverified: bool = False
     extra_adapter_dirs: Sequence[str] = ()
 
+    instructions: Optional[str] = None
+    """Repo-relative path of the canonical instructions file.
+
+    ``None`` means "work it out": a root ``AGENTS.md`` (then ``CLAUDE.md``) if one
+    exists, else ``<canonical_dir>/instructions.md``. Set it explicitly to pin
+    the source of truth somewhere else.
+    """
+
     @property
     def canonical(self) -> Path:
         return self.root / self.canonical_dir
+
+    @property
+    def instructions_rel(self) -> str:
+        """Resolved repo-relative canonical instructions path."""
+        if self.instructions:
+            return self.instructions
+        for name in ROOT_INSTRUCTION_CANDIDATES:
+            if _is_source_of_truth(self.root / name):
+                return name
+        return "{}/instructions.md".format(self.canonical_dir)
+
+    @property
+    def instructions_path(self) -> Path:
+        return self.root / self.instructions_rel
+
+    @property
+    def overlays_dir(self) -> Path:
+        """Per-tool additions appended to that tool's mirror."""
+        return self.canonical / "overlays"
 
     @property
     def config_path(self) -> Path:
@@ -69,6 +111,31 @@ class Config:
         """True when a path lies within the canonical tree."""
         rel = self.rel(path)
         return rel == self.canonical_dir or rel.startswith(self.canonical_dir + "/")
+
+
+def _is_source_of_truth(path: Path) -> bool:
+    """True when ``path`` is a hand-written instruction file, not one of our mirrors.
+
+    Auto-detection has to exclude agentmeld's own output or the source of truth
+    moves between runs: sync writes a root AGENTS.md mirror, the next run sees it
+    and adopts it as canonical, and nothing is idempotent any more. Three shapes
+    are ours -- a symlink, a file carrying the generated header, and a bare import
+    line -- and none of them is somebody's authored content.
+    """
+    if not path.is_file() or path.is_symlink():
+        return False
+    try:
+        head = path.read_text(encoding="utf-8", errors="replace")[:4096]
+    except OSError:
+        return False
+    from .transform import HEADER_TOKEN
+
+    if HEADER_TOKEN in head:
+        return False
+    stripped = head.strip()
+    if stripped.startswith("@") and "\n" not in stripped:
+        return False  # a one-line import mirror
+    return True
 
 
 def find_repo_root(start: Optional[Path] = None) -> Path:
@@ -102,8 +169,16 @@ def load_config(root: Optional[Path] = None, canonical_dir: Optional[str] = None
     cfg.git_policy = section.get("git_policy", cfg.git_policy)
     cfg.include_unverified = bool(section.get("include_unverified", cfg.include_unverified))
     cfg.extra_adapter_dirs = tuple(section.get("extra_adapter_dirs", ()))
+    cfg.instructions = section.get("instructions", cfg.instructions)
     targets = section.get("targets")
     cfg.targets = tuple(targets) if targets else None
+
+    if cfg.instructions is None and (cfg.canonical / "instructions.md").is_file():
+        # An already-initialised repo keeps the source of truth it has. Upgrading
+        # agentmeld must not relocate it, and auto-detection could: a copy-mode
+        # AGENTS.md mirror with no rules folded in is a plain headerless file, and
+        # would otherwise look exactly like an authored one.
+        cfg.instructions = "{}/instructions.md".format(cfg.canonical_dir)
 
     if cfg.mode not in ("auto", "link", "copy"):
         raise ValueError("mode must be auto, link or copy (got {!r})".format(cfg.mode))
@@ -137,12 +212,15 @@ def discover_assets(config: Config) -> List[Asset]:
     """
     assets: List[Asset] = []
     base = config.canonical
-    if not base.is_dir():
-        return assets
 
-    instructions = base / "instructions.md"
+    instructions = config.instructions_path
     if instructions.is_file():
         assets.append(_load_markdown(AssetKind.INSTRUCTIONS, "instructions", instructions))
+
+    if not base.is_dir():
+        # Canonical instructions can live at the repo root with no canonical tree
+        # at all, which is the common shape: one file, several mirrors.
+        return assets
 
     for kind, subdir in (
         (AssetKind.RULE, "rules"),
@@ -184,3 +262,26 @@ def discover_assets(config: Config) -> List[Asset]:
         )
 
     return assets
+
+
+def load_overlays(config: Config) -> Dict[str, str]:
+    """Adapter id -> that tool's extra instructions, from ``overlays/<id>.md``.
+
+    Nearly a third of repos carrying two instruction files write genuinely
+    different content in them -- release procedure, CI specifics, tool
+    invocation -- so mirroring one file into the other would destroy
+    information. Overlays are how that content keeps a home while the shared
+    part still has a single source.
+    """
+    out: Dict[str, str] = {}
+    directory = config.overlays_dir
+    if not directory.is_dir():
+        return out
+    for path in sorted(directory.glob("*.md")):
+        if not path.is_file():
+            continue
+        try:
+            out[path.stem] = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+    return out
