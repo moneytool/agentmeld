@@ -28,9 +28,20 @@ class TestEject:
         assert mirror.is_file()
 
     def test_content_survives(self, initialised, run_cli):
-        expected = (initialised / ".ai/instructions.md").read_text()
+        canonical = (initialised / "AGENTS.md").read_text().strip()
         run_cli("--root", str(initialised), "restore")
-        assert (initialised / ".github/copilot-instructions.md").read_text() == expected
+        ejected = (initialised / ".github/copilot-instructions.md").read_text()
+        assert canonical in ejected
+        assert "drifted" in ejected, "the per-tool overlay must survive an eject too"
+
+    def test_an_import_mirror_is_inlined_so_it_stands_alone(self, initialised, run_cli):
+        """A one-line @AGENTS.md works only while that file lasts; eject promises more."""
+        assert (initialised / "CLAUDE.md").read_text().startswith("@AGENTS.md")
+        run_cli("--root", str(initialised), "restore")
+        text = (initialised / "CLAUDE.md").read_text()
+        assert not text.startswith("@AGENTS.md")
+        assert "Run tests with pytest" in text
+        assert "agentmeld:generated" not in text
 
     @pytest.mark.skipif(not SYMLINKS, reason="symlinks unavailable")
     def test_skill_directory_becomes_a_real_directory_with_sidecars(
@@ -59,7 +70,8 @@ class TestEject:
     def test_canonical_tree_is_left_alone(self, initialised, run_cli):
         """Deleting someone's source of truth on their behalf would be rude."""
         run_cli("--root", str(initialised), "restore")
-        assert (initialised / ".ai/instructions.md").is_file()
+        assert (initialised / "AGENTS.md").is_file()
+        assert (initialised / ".ai/rules/testing.md").is_file()
 
     def test_dry_run_changes_nothing(self, initialised, run_cli):
         mirror = initialised / ".github/copilot-instructions.md"

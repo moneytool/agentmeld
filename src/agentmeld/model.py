@@ -53,6 +53,20 @@ class Strategy(str, enum.Enum):
     LINK = "link"
     """Relative symlink from the vendor path to the canonical file."""
 
+    IMPORT = "import"
+    """A one-line file that tells the tool to read the canonical file instead.
+
+    Preferred over :attr:`LINK` wherever the vendor supports it. A symlink has
+    four failure modes an import does not: Windows without Developer Mode, git
+    ``core.symlinks=false``, archive and container builds that dereference or
+    drop links, and non-POSIX filesystems that serialise the link into the file
+    body (CIFS writes ``XSym``). All four fail *silently* -- the tool reads the
+    pointer text as instructions and does nothing.
+
+    It is also what people already do by hand. Of 30 hand-written pointer files
+    sampled from public repos, 21 were exactly ``@AGENTS.md``.
+    """
+
     GENERATE = "generate"
     """A derived file: translated frontmatter plus a provenance header."""
 
@@ -136,6 +150,14 @@ class KindSpec:
     transformer: Optional[str] = None
     """Named transformer for formats plain key-renaming cannot express."""
 
+    import_line: str = ""
+    """Template for :attr:`Strategy.IMPORT`, with ``{path}`` as the canonical path.
+
+    Claude Code uses ``@{path}``. Required when the strategy is ``import``, and
+    meaningless otherwise -- the vendor's import syntax is a fact about the
+    vendor, so it belongs in the registry rather than in code.
+    """
+
     frontmatter: Mapping[str, str] = field(default_factory=dict)
     """canonical key -> vendor key, or a ``__directive__``."""
 
@@ -158,6 +180,9 @@ class KindSpec:
 
     def render_target(self, slug: str) -> str:
         return self.target.format(slug=slug)
+
+    def render_import(self, canonical_rel: str) -> str:
+        return self.import_line.format(path=canonical_rel)
 
 
 @dataclass(frozen=True)

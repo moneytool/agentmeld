@@ -27,11 +27,33 @@ def hashes(root: Path) -> dict:
 class TestInit:
     def test_adopts_existing_config_into_canonical(self, repo, run_cli):
         assert run_cli("--root", str(repo), "init") == EXIT_OK
-        assert (repo / ".ai/instructions.md").is_file()
         assert (repo / ".ai/rules/testing.md").is_file()
         assert (repo / ".ai/skills/deploy/SKILL.md").is_file()
         assert (repo / ".ai/mcp.json").is_file()
         assert (repo / ".ai/agentmeld.toml").is_file()
+
+    def test_instructions_become_agents_md_at_the_root(self, repo, run_cli):
+        """The source of truth is the standard file, and it is not moved into .ai/."""
+        run_cli("--root", str(repo), "init")
+        assert (repo / "AGENTS.md").is_file()
+        assert not (repo / ".ai/instructions.md").exists()
+        assert 'instructions = "AGENTS.md"' in (repo / ".ai/agentmeld.toml").read_text()
+
+    def test_claude_md_comes_back_as_a_one_line_import(self, repo, run_cli):
+        """The fixture had only CLAUDE.md, so it was renamed -- but nothing broke."""
+        run_cli("--root", str(repo), "init")
+        text = (repo / "CLAUDE.md").read_text()
+        assert text.splitlines()[0] == "@AGENTS.md"
+
+    def test_a_divergent_second_file_is_kept_as_an_overlay(self, repo, run_cli):
+        """Copilot's drifted content differs, so it must not simply be overwritten."""
+        run_cli("--root", str(repo), "init")
+        overlay = repo / ".ai/overlays/copilot.md"
+        assert overlay.is_file(), "divergent content must survive migration"
+        assert "drifted" in overlay.read_text()
+        mirror = (repo / ".github/copilot-instructions.md").read_text()
+        assert "drifted" in mirror, "the overlay must still reach Copilot"
+        assert "Run tests with pytest" in mirror, "and the shared base too"
 
     def test_backs_up_before_moving_anything(self, repo, run_cli):
         run_cli("--root", str(repo), "init")
@@ -42,7 +64,7 @@ class TestInit:
     def test_refuses_to_migrate_a_dirty_worktree(self, repo, run_cli):
         (repo / "dirty.txt").write_text("uncommitted\n")
         assert run_cli("--root", str(repo), "init") != EXIT_OK
-        assert not (repo / ".ai/instructions.md").exists()
+        assert not (repo / ".ai").exists()
 
     def test_force_overrides_the_dirty_check(self, repo, run_cli):
         (repo / "dirty.txt").write_text("uncommitted\n")
@@ -83,11 +105,11 @@ class TestSync:
         assert run_cli("--root", str(initialised), "sync", "--check") == EXIT_OK
 
     def test_check_reports_drift(self, initialised, run_cli):
-        (initialised / ".ai/instructions.md").write_text("# changed\n", encoding="utf-8")
+        (initialised / "AGENTS.md").write_text("# changed\n", encoding="utf-8")
         assert run_cli("--root", str(initialised), "sync", "--check") == EXIT_DRIFT
 
     def test_check_writes_nothing(self, initialised, run_cli):
-        (initialised / ".ai/instructions.md").write_text("# changed\n", encoding="utf-8")
+        (initialised / "AGENTS.md").write_text("# changed\n", encoding="utf-8")
         before = hashes(initialised)
         run_cli("--root", str(initialised), "sync", "--check")
         assert hashes(initialised) == before
@@ -137,9 +159,9 @@ class TestSync:
 @pytest.mark.skipif(not SYMLINKS, reason="symlinks unavailable on this platform")
 class TestSymlinkMode:
     @pytest.fixture
-    def initialised(self, repo, run_cli):
-        run_cli("--root", str(repo), "init")
-        return repo
+    def initialised(self, tidy_repo, run_cli):
+        run_cli("--root", str(tidy_repo), "init")
+        return tidy_repo
 
     def test_instruction_mirror_is_a_symlink(self, initialised):
         assert (initialised / ".github/copilot-instructions.md").is_symlink()
@@ -149,7 +171,7 @@ class TestSymlinkMode:
         mirror = initialised / ".github/copilot-instructions.md"
         with mirror.open("a", encoding="utf-8") as handle:
             handle.write("\nAdded via the mirror.\n")
-        assert "Added via the mirror." in (initialised / ".ai/instructions.md").read_text()
+        assert "Added via the mirror." in (initialised / "AGENTS.md").read_text()
 
     def test_skill_directory_is_linked_whole_so_sidecars_ride_along(self, initialised):
         link = initialised / ".claude/skills/deploy"
@@ -354,29 +376,39 @@ class TestCliSurface:
 class TestStrategyTransitions:
     """A repo's shape changes over time; mirrors must follow without conflicting."""
 
-    def test_link_becomes_aggregate_when_the_first_rule_appears(self, repo, run_cli):
-        """Found by running agentmeld on its own repo."""
-        run_cli("--root", str(repo), "init")
-        # Remove the fixture's rule so instructions start life as a plain symlink.
-        (repo / ".ai/rules/testing.md").unlink()
-        run_cli("--root", str(repo), "sync")
-        assert (repo / "AGENTS.md").is_symlink()
+    @pytest.mark.skipif(not SYMLINKS, reason="symlinks unavailable on this platform")
+    def test_link_becomes_aggregate_when_the_first_rule_appears(self, tidy_repo, run_cli):
+        """Found by running agentmeld on its own repo.
 
-        (repo / ".ai/rules").mkdir(exist_ok=True)
-        (repo / ".ai/rules/new.md").write_bytes(
+        Gemini CLI reads one document and has no rule mechanism, so its mirror is a
+        plain symlink until a rule exists and must become a real file the moment
+        one does -- otherwise the rule silently never reaches it.
+        """
+        run_cli("--root", str(tidy_repo), "init")
+        assert (tidy_repo / "GEMINI.md").is_symlink()
+
+        (tidy_repo / ".ai/rules").mkdir(parents=True, exist_ok=True)
+        (tidy_repo / ".ai/rules/new.md").write_bytes(
             b"---\ndescription: A new rule\nglobs:\n  - src/**\n---\nDo the thing.\n"
         )
-        assert run_cli("--root", str(repo), "sync") == EXIT_OK
-        assert not (repo / "AGENTS.md").is_symlink()
-        assert "Do the thing." in (repo / "AGENTS.md").read_text()
-        assert run_cli("--root", str(repo), "sync", "--check") == EXIT_OK
+        assert run_cli("--root", str(tidy_repo), "sync") == EXIT_OK
+        assert not (tidy_repo / "GEMINI.md").is_symlink()
+        assert "Do the thing." in (tidy_repo / "GEMINI.md").read_text()
+        assert run_cli("--root", str(tidy_repo), "sync", "--check") == EXIT_OK
 
-    def test_aggregate_becomes_link_when_the_last_rule_goes(self, repo, run_cli):
-        run_cli("--root", str(repo), "init")
-        assert not (repo / "AGENTS.md").is_symlink()  # fixture has a rule
-        (repo / ".ai/rules/testing.md").unlink()
-        assert run_cli("--root", str(repo), "sync") == EXIT_OK
-        assert (repo / "AGENTS.md").is_symlink()
+    @pytest.mark.skipif(not SYMLINKS, reason="symlinks unavailable on this platform")
+    def test_aggregate_becomes_link_when_the_last_rule_goes(self, tidy_repo, run_cli):
+        run_cli("--root", str(tidy_repo), "init")
+        (tidy_repo / ".ai/rules").mkdir(parents=True, exist_ok=True)
+        (tidy_repo / ".ai/rules/new.md").write_bytes(
+            b"---\ndescription: A new rule\nglobs:\n  - src/**\n---\nDo the thing.\n"
+        )
+        run_cli("--root", str(tidy_repo), "sync")
+        assert not (tidy_repo / "GEMINI.md").is_symlink()
+
+        (tidy_repo / ".ai/rules/new.md").unlink()
+        assert run_cli("--root", str(tidy_repo), "sync") == EXIT_OK
+        assert (tidy_repo / "GEMINI.md").is_symlink()
 
     def test_editing_a_mirror_and_stripping_the_header_is_a_conflict(self, repo, run_cli):
         """Recorded as ours is not the same as unmodified -- do not discard edits."""
@@ -416,7 +448,7 @@ class TestRootFlagPositions:
 
     def test_root_after_the_subcommand_actually_targets_that_repo(self, repo, run_cli):
         assert run_cli("init", "--root", str(repo)) == EXIT_OK
-        assert (repo / ".ai/instructions.md").is_file()
+        assert (repo / ".ai/agentmeld.toml").is_file()
 
 
 class TestInertRuleDetection:

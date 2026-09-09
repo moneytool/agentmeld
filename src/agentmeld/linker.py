@@ -76,12 +76,29 @@ def git_symlinks_enabled(root: Path) -> Optional[bool]:
     return None
 
 
+def _default_file_mode() -> int:
+    """0644 minus the process umask.
+
+    ``mkstemp`` deliberately creates 0600 files. That is right for a temp file and
+    wrong for the finished mirror: an instruction file has to be readable by
+    whoever else works in the repo, and a 0600 file committed from one machine
+    reads as a permission change in every diff.
+    """
+    umask = os.umask(0)
+    os.umask(umask)
+    return 0o644 & ~umask
+
+
 def atomic_write_bytes(path: Path, data: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, tmp_name = tempfile.mkstemp(dir=str(path.parent), prefix=".agm-", suffix=".tmp")
     try:
         with os.fdopen(fd, "wb") as handle:
             handle.write(data)
+        try:
+            os.chmod(tmp_name, _default_file_mode())
+        except OSError:
+            pass  # exotic filesystem; the content matters more than the mode
         os.replace(tmp_name, str(path))
     except BaseException:
         try:
@@ -203,14 +220,30 @@ def classify(
     if current == mirror.payload:
         return Action.UNCHANGED
 
+    from .transform import source_hash
+
+    if mirror.strategy is Strategy.IMPORT:
+        # A bare import is one line, too short to carry a header, so ownership comes
+        # from state -- but *recorded as ours* is not the same as *unmodified*.
+        # Comparing against what we last wrote is what distinguishes a stale mirror
+        # from somebody's edit, and skipping that check would silently discard it.
+        if entry is not None and entry.output_hash:
+            if source_hash(current) == entry.output_hash:
+                return Action.UPDATE
+        elif entry is not None:
+            return Action.UPDATE
+        mirror.reason = (
+            "this file differs from both the import we would write and the one we "
+            "last wrote -- edit the source, or delete this to let agentmeld own it"
+        )
+        return Action.CONFLICT
+
     if mirror.strategy is Strategy.LINK:
         # copy-mode link: trust state, since a copy carries no header of its own
         if entry is not None:
             return Action.UPDATE
         mirror.reason = "a real file already exists here and agentmeld did not create it"
         return Action.CONFLICT
-
-    from .transform import source_hash
 
     if entry is not None and entry.output_hash and source_hash(current) == entry.output_hash:
         # Byte-for-byte what we last wrote, so the canonical source moved on and
