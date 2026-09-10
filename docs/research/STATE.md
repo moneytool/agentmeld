@@ -7,7 +7,7 @@ uncertain parts marked.
 
 ## Shipped
 
-**agentmeld 0.1.4** on PyPI. https://github.com/moneytool/agentmeld
+**agentmeld 0.2.0** on PyPI. https://github.com/moneytool/agentmeld
 
 | Version | Contents |
 |---|---|
@@ -15,10 +15,16 @@ uncertain parts marked.
 | 0.1.1 | data-loss fix; `agentmeld restore`; JSONC comment warning; exact-match hook removal |
 | 0.1.2 | Gemini TOML command adoption (completes the round trip) |
 | 0.1.3 | `doctor` reports rules with no automatic trigger |
-| 0.1.4 | corrected `doctor` wording — those rules are *manual*, not dead (PR #17) |
+| 0.1.4 | **merged but never released.** No tag was pushed, so PyPI went straight from 0.1.3 to 0.2.0. Do not cite 0.1.4 as a published version. |
+| 0.2.0 | `import` strategy, per-tool overlays, root `AGENTS.md` as the source of truth, the new `doctor` checks, report-only `watch` — and the corrected `doctor` wording that 0.1.4 was supposed to carry (PR #17, #20, #21) |
 
 ### Repo gotchas
 
+- **A merged release PR is not a release.** Publishing happens when the `vX.Y.Z`
+  tag is pushed, which is a deliberate manual step (a workflow-pushed tag would
+  not trigger `release.yml`). 0.1.4 was merged and then sat unpublished for a day
+  because nobody pushed the tag. Check `git ls-remote --tags` and PyPI, not the
+  PR list.
 - **Never merge PRs.** The owner reviews and merges. Do not use `gh pr merge --admin`.
 - **Never post to GitHub** (issues, comments, PRs) without being asked explicitly.
 - The `PEER Review` ruleset requires **2 approving reviews**, which a solo
@@ -50,6 +56,7 @@ transferable part.
 | 06 | rule count does not affect adherence; models barely differ | **most carefully checked**; 135 runs, code stored |
 | 07 | **12.3% of active repos carry AI config; 9.5% → 32.2% by stars; `AGENTS.md` > `CLAUDE.md`** | **primary result**; frozen frame, n=4,314, stratified + weighted |
 | 08 | **the AGENTS+CLAUDE pair is 59.5% already single-sourced; only 5.7% duplicate** | **primary result**; n=210, symlinks detected by git mode |
+| 09 | MCP config is in 1.24% of repos; 0.3% have it *without* instruction config | solid but **narrow** — repo-level only; user-level MCP config is invisible to it |
 
 ### The frame problem (important)
 
@@ -160,6 +167,18 @@ years. It is a credential, not a lever.
   rule files and autonomous agents respectively.
 
 ---
+
+## Settled questions
+
+- **Should agentmeld be an MCP server? No.** Asked 2026-09-10 after an
+  unsolicited directory listing misidentified it as one. Three reasons, in order
+  of weight: instruction files load at session start while MCP tools are called
+  mid-session, so a server cannot deliver instructions to the tool that needs
+  them; every MCP client already has a shell and can run `uvx agentmeld sync`;
+  and only 6.8% of the repos that carry instruction config have in-repo MCP
+  config at all (finding 09). Do not re-argue this from the prevalence number
+  alone — it is the weakest of the three and cannot carry the conclusion by
+  itself.
 
 ## Outstanding
 
