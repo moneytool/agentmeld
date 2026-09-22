@@ -102,7 +102,7 @@ proves it; unverified adapters are excluded from the default sync.
 - `restore` — turn every mirror back into a real file and remove hooks.
 - Strategies per file kind: `link`, `generate`, `merge`, `aggregate`; a
   symlink probe that degrades to copies on Windows without Developer Mode.
-- Adapters: Claude Code, GitHub Copilot, Cursor, Gemini CLI, Zed, and the AGENTS.md standard. Tested on Linux, macOS and Windows, Python 3.9–3.14.
+- Adapters: Claude Code, GitHub Copilot, Cursor, Gemini CLI, Zed, and the AGENTS.md standard. CI runs the suite on Linux, macOS and Windows under Python 3.9, 3.12 and 3.13; the package declares support for 3.9–3.14.
 
 # Research applications
 
