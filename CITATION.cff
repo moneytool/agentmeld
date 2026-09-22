@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use agentmeld in research, please cite it as below."
+type: software
+title: "agentmeld: one source of truth for AI coding-agent configuration"
+authors:
+  - family-names: "AUTHOR_FAMILY"
+    given-names: "AUTHOR_GIVEN"
+    orcid: "https://orcid.org/AUTHOR_ORCID"
+    affiliation: "Independent researcher"
+version: 0.2.0
+date-released: "RELEASE_DATE"
+doi: "ZENODO_DOI"
+repository-code: "https://github.com/moneytool/agentmeld"
+url: "https://github.com/moneytool/agentmeld"
+license: MIT
+keywords:
+  - AI coding agents
+  - developer tooling
+  - configuration management
+  - AGENTS.md
+  - reproducibility
