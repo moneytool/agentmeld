@@ -9,7 +9,7 @@ description = "One AI context, every agent. Symlink-first, always-on sync of ins
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
-authors = [{ name = "AUTHOR_FULL", email = "AUTHOR_EMAIL" }]  # FLIP-DAY: legal name
+authors = [{ name = "AUTHOR_FULL", email = "author@example.invalid" }]  # FLIP-DAY: legal name
 keywords = [
   "ai", "agents", "claude", "copilot", "cursor", "gemini", "codex",
   "agents-md", "claude-md", "mcp", "symlink", "developer-tools",

@@ -4,10 +4,10 @@ Do these in order, all on the same day. Nothing before.
 
 1. `git checkout joss-readiness && git rebase main` (resolve nothing by hand
    without reading it).
-2. Replace placeholders: `AUTHOR_FULL`, `AUTHOR_EMAIL`, `AUTHOR_FAMILY`,
+2. Replace placeholders: `AUTHOR_FULL`, `author@example.invalid`, `AUTHOR_FAMILY`,
    `AUTHOR_GIVEN`, `AUTHOR_ORCID`, `SUBMIT_DATE`, `RELEASE_DATE` in
    `paper.md`, `paper.bib`, `CITATION.cff`, `pyproject.toml`.
-   `grep -rn "AUTHOR_\|SUBMIT_DATE\|RELEASE_DATE\|ZENODO_DOI\|PILOT_DOI" --include=*.md --include=*.bib --include=*.cff --include=*.toml .` must return nothing except this file.
+   `grep -rn "AUTHOR_\|example.invalid\|SUBMIT_DATE\|RELEASE_DATE\|ZENODO_DOI\|PILOT_DOI" --include=*.md --include=*.bib --include=*.cff --include=*.toml .` must return nothing except this file.
 3. GitHub: org/user profile shows the legal name; you are a public member.
    Screenshot both → `~/workspace/authorship/evidence/`.
 4. `git config user.name` = legal name for this commit onward.
