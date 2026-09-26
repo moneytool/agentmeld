@@ -8,7 +8,7 @@ tags:
   - reproducibility
 authors:
   - name: AUTHOR_FULL
-    orcid: AUTHOR_ORCID
+    orcid: 0009-0005-1167-2026
     affiliation: 1
 affiliations:
   - name: Independent researcher, USA

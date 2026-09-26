@@ -2,6 +2,7 @@
 
 Do these in order, all on the same day. Nothing before.
 
+0. (2026-09-24) The name is already public; steps 2–4 can be done any time before submission.
 1. `git checkout joss-readiness && git rebase main` (resolve nothing by hand
    without reading it).
 2. Replace placeholders: `AUTHOR_FULL`, `author@example.invalid`, `AUTHOR_FAMILY`,
