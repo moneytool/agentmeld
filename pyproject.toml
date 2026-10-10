@@ -5,11 +5,11 @@ build-backend = "hatchling.build"
 [project]
 name = "agentmeld"
 dynamic = ["version"]
-description = "One AI context, every agent. Symlink-first, always-on sync of instructions, rules, skills, agents, commands and MCP config across every AI coding tool."
+description = "One AI context, every agent. One source of truth for instructions, rules, skills, agents, commands and MCP config, mirrored into every AI coding tool, with per-tool overlays for what genuinely differs."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
-authors = [{ name = "AUTHOR_FULL", email = "author@example.invalid" }]  # FLIP-DAY: legal name
+authors = [{ name = "Vamshidher Reddy Jannapu Reddy", email = "v.jannapu@gmail.com" }]
 keywords = [
   "ai", "agents", "claude", "copilot", "cursor", "gemini", "codex",
   "agents-md", "claude-md", "mcp", "symlink", "developer-tools",

@@ -5,8 +5,12 @@ Do these in order, all on the same day. Nothing before.
 0. (2026-09-24) The name is already public; steps 2–4 can be done any time before submission.
 1. `git checkout joss-readiness && git rebase main` (resolve nothing by hand
    without reading it).
-2. Replace placeholders: `AUTHOR_FULL`, `author@example.invalid`, `SUBMIT_DATE`
-   in `paper.md`, `paper.bib`, `pyproject.toml`.
+2. Replace placeholders. **Only `SUBMIT_DATE` (`paper.md`) and `PILOT_DOI`
+   (`paper.bib`, `research/pilot/README.md`) are left**, and both are
+   release-time by nature: the submission date is not known until the day, and
+   the pilot DOI does not exist until the archive does.
+   `AUTHOR_FULL` and the placeholder email were filled in on 2026-10-09 across
+   `paper.md`, `paper.bib` and `pyproject.toml`.
    **`CITATION.cff` is already done** (2026-10-09) — real name, ORCID, abstract,
    version, date, and the field order the other two projects use. The only thing
    still missing from it is `doi:`/`identifiers:`, which cannot exist until a
