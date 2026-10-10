@@ -1,21 +1,34 @@
 cff-version: 1.2.0
-message: "If you use agentmeld in research, please cite it as below."
-type: software
+message: "If you use this software or its corpus, please cite it."
 title: "agentmeld: one source of truth for AI coding-agent configuration"
-authors:
-  - family-names: "AUTHOR_FAMILY"
-    given-names: "AUTHOR_GIVEN"
-    orcid: "https://orcid.org/0009-0005-1167-2026"
-    affiliation: "Independent researcher"
-version: 0.2.0
-date-released: "RELEASE_DATE"
-doi: "ZENODO_DOI"
-repository-code: "https://github.com/moneytool/agentmeld"
-url: "https://github.com/moneytool/agentmeld"
+abstract: >-
+  agentmeld keeps one source of truth for the natural-language configuration an AI coding
+  agent reads, and mirrors it into every vendor location: a one-line import where a tool can
+  be told to read another file, a symlink or generated file where it cannot, a surgical merge
+  into shared config such as MCP server declarations, and a per-tool overlay for guidance that
+  is deliberately specific to one tool. Adapters are declarative TOML carrying a confidence
+  field, so a path not confirmed against primary vendor documentation is excluded from the
+  default sync. The design follows a measurement rather than an assumption: in a stratified
+  sample of 1,905 public repositories carrying a root AGENTS.md, 649 also carry a CLAUDE.md,
+  and of those pairs 40% are two genuinely distinct documents while 44% already point one file
+  at the other. Mirroring one file over another would therefore destroy work about as often as
+  it would save any, which is why the shared base and the per-tool difference are kept apart.
+  The repository includes the mining script and the classified pair dataset.
+type: software
 license: MIT
+version: 0.2.0
+date-released: "2026-09-09"
+repository-code: "https://github.com/moneytool/agentmeld"
+url: "https://pypi.org/project/agentmeld/"
 keywords:
   - AI coding agents
   - developer tooling
   - configuration management
   - AGENTS.md
+  - Model Context Protocol
   - reproducibility
+authors:
+  - family-names: "Jannapu Reddy"
+    given-names: "Vamshidher Reddy"
+    affiliation: "Independent researcher"
+    orcid: "https://orcid.org/0009-0005-1167-2026"
