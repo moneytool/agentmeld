@@ -117,8 +117,6 @@ confound.
 
 # Acknowledgements
 
-Portions of the code, tests and documentation were drafted with AI
-assistance (Anthropic Claude) under the author's direction and were reviewed,
-tested and edited by the author, who is responsible for the content.
+The manuscript and much of the software were drafted and revised with AI assistance (Anthropic Claude) under the author's direction; the author reviewed and edited the full text, designed and ran all tests and measurements, and takes full responsibility for the content. No external funding.
 
 # References
