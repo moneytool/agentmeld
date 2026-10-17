@@ -2,6 +2,21 @@
 
 ## [0.2.1] - 2026-10-17
 
+### Added
+
+- **JOSS paper** (`paper.md`, `paper.bib`): the software paper for the Journal of
+  Open Source Software, with the figures from the September–October 2026
+  configuration study.
+- **`research/study-2026-10/`**: the study's miner, classifier, import checker and
+  drift scripts, and the dataset (2,421 repositories, no file bodies) behind the
+  paper's numbers.
+
+### Changed
+
+- `CITATION.cff` and package metadata carry the author's name and ORCID.
+- README: pilot numbers replaced by the study's; CONTRIBUTING gains report and
+  support sections.
+
 ## [0.2.0] - 2026-09-09
 
 ### Added
