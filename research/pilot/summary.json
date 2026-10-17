@@ -1,0 +1,26 @@
+{
+  "scanned_with_agents_md": 1905,
+  "with_both": 649,
+  "classes": {
+    "distinct": 259,
+    "symlink_claude_to_agents": 123,
+    "import_pointer": 124,
+    "prose_pointer": 41,
+    "identical": 34,
+    "near_identical": 33,
+    "overlapping": 32,
+    "corrupted_plain_pointer": 2,
+    "symlink_claude_other": 1
+  },
+  "pct": {
+    "distinct": 39.9,
+    "symlink_claude_to_agents": 19.0,
+    "import_pointer": 19.1,
+    "prose_pointer": 6.3,
+    "identical": 5.2,
+    "near_identical": 5.1,
+    "overlapping": 4.9,
+    "corrupted_plain_pointer": 0.3,
+    "symlink_claude_other": 0.2
+  }
+}

@@ -33,11 +33,13 @@ AGENTS.md                     ← you edit this, once (not moved anywhere)
 ```
 
 **Why an overlay and not just one identical file everywhere?** Because that is
-not what people actually want. Of 210 public repos carrying both `AGENTS.md` and
-`CLAUDE.md`, 30.5% deliberately write *different* things in each — release
-procedure, CI specifics, tool invocation — and only 5.7% keep two copies of the
-same document. Blindly mirroring one over the other destroys work. So agentmeld
-shares the base and keeps the difference.
+not what people actually want. In a stratified sample of 1,905 public repos with
+a root `AGENTS.md` (September 2026), 649 also carry a `CLAUDE.md`; of those, 40%
+deliberately write *different* things in each — release procedure, CI specifics,
+tool invocation — a further 10% are copies that have already partly diverged,
+and only 5% keep two identical copies (see `research/pilot/`). Blindly mirroring
+one over the other destroys work. So agentmeld shares the base and keeps the
+difference.
 
 ## Install
 
@@ -296,10 +298,11 @@ reads the pointer text as its instructions and follows nothing:
 - non-POSIX filesystems — SMB/CIFS serialises the link into the file body as
   `XSym`.
 
-None of these are hypothetical. In a sample of 210 public repos carrying both
-`AGENTS.md` and `CLAUDE.md`, 67 use a symlink and **three are already corrupted**
-this way — one `XSym` blob, two committed as a plain file whose entire body is the
-word `AGENTS.md`. Nobody had noticed, because on the author's machine it works.
+None of these are hypothetical. In the same sample of 649 repos carrying both
+`AGENTS.md` and `CLAUDE.md`, 124 make `CLAUDE.md` a symlink and **two are already
+corrupted** this way — committed as a plain file whose entire body is the word
+`AGENTS.md`, which the tool then reads as its instructions. Nobody had noticed,
+because on the author's machine it works.
 
 That is why `import` is preferred where a vendor supports it, and why
 `agentmeld doctor` reports files in this state. For the rest:

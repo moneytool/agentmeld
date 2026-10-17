@@ -81,6 +81,19 @@ not declare anything for it. The only thing to know is that an overlay forces a
 real file: a symlink cannot carry per-tool content, so a `link` mirror is upgraded
 to a generated document when one exists.
 
+## Reporting a problem
+
+Open a GitHub issue. Include the agentmeld version (`agentmeld --version`), your
+OS and filesystem (symlink behaviour differs across them), the command you ran,
+and the output of `agentmeld doctor`. If a file was overwritten or a link
+corrupted, say so first; that is treated as a release blocker.
+
+## Getting help
+
+Questions that are not bug reports go in GitHub Discussions, or in an issue
+labelled `question` if Discussions are off. There is no chat channel; issues
+are answered within a few days.
+
 ## Running the tests
 
 ```bash
